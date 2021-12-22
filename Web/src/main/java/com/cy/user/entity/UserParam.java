@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserParm {
+public class UserParam {
     //页容量
     private Long pageSize;
     //当前页

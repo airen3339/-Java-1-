@@ -3,7 +3,7 @@ package com.cy.user.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.cy.user.entity.User;
-import com.cy.user.entity.UserParm;
+import com.cy.user.entity.UserParam;
 
 /**
  * @author cy
@@ -13,5 +13,5 @@ import com.cy.user.entity.UserParm;
  */
 public interface UserService extends IService<User> {
     //查询用户列表
-    IPage<User> list(UserParm parm);
+    IPage<User> list(UserParam parm);
 }

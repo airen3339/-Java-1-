@@ -2,15 +2,17 @@ package com.cy.user.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.cy.ResultMessage;
 import com.cy.user.entity.User;
-import com.cy.user.entity.UserParm;
+import com.cy.user.entity.UserParam;
 import com.cy.user.service.UserService;
-import com.cy.utils.ResultUtils;
-import com.cy.utils.ResultVo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 /**
  * @author cy
@@ -32,14 +34,14 @@ public class UserController {
      */
 
     @PostMapping
-    public ResultVo addUser(@RequestBody User user) {
+    public ResultMessage addUser(@RequestBody User user) {
         //判断登录名是否存在
         if (StringUtils.isNotEmpty(user.getLoginName())){
             QueryWrapper<User> wrapper = new QueryWrapper<>();
             wrapper.lambda().eq(User::getLoginName,user.getLoginName());
             User one = userService.getOne(wrapper);
             if (one != null){
-                return ResultUtils.error("登录名已存在",500);
+                return ResultMessage.fail(500,"登录名已存在");
             }
         }
 
@@ -49,9 +51,9 @@ public class UserController {
         }
         boolean saveState = userService.save(user);
         if (saveState) {
-            return ResultUtils.success("新增员工成功");
+            return ResultMessage.success("新增员工成功");
         }
-        return ResultUtils.success("新增员工失败");
+        return ResultMessage.success("新增员工失败");
     }
 
     /**
@@ -62,14 +64,14 @@ public class UserController {
      */
 
     @PutMapping
-    public ResultVo editUser(@RequestBody User user) {
+    public ResultMessage editUser(@RequestBody User user) {
         //判断登录名是否存在
         if (StringUtils.isNotEmpty(user.getLoginName())){
             QueryWrapper<User> wrapper = new QueryWrapper<>();
             wrapper.lambda().eq(User::getLoginName,user.getLoginName());
             User one = userService.getOne(wrapper);
             if (one != null && !one.getUserId().equals(user.getUserId())){
-                return ResultUtils.error("登录名已存在",500);
+                return ResultMessage.fail(500,"登录名已存在");
             }
         }
 
@@ -80,9 +82,9 @@ public class UserController {
 
         boolean updateState = userService.updateById(user);
         if (updateState) {
-            return ResultUtils.success("编辑员工成功");
+            return ResultMessage.success("编辑员工成功");
         }
-        return ResultUtils.success("编辑新增员工失败");
+        return ResultMessage.success("编辑员工失败");
     }
 
     /**
@@ -93,12 +95,12 @@ public class UserController {
      */
 
     @DeleteMapping("/{userId}")
-    public ResultVo deleteUser(@PathVariable("userId") long userId) {
+    public ResultMessage deleteUser(@PathVariable("userId") long userId) {
         boolean removeState = userService.removeById(userId);
         if (removeState) {
-            return ResultUtils.success("编辑员工成功");
+            return ResultMessage.success("删除员工成功");
         }
-        return ResultUtils.success("编辑新增员工失败");
+        return ResultMessage.success("删除员工失败");
     }
 
     /***
@@ -109,9 +111,10 @@ public class UserController {
      */
 
     @GetMapping("/list")
-    public ResultVo listUsers(UserParm param) {
+    public ResultMessage listUsers(@Valid UserParam param , BindingResult result) {
+
         IPage<User> list = userService.list(param);
         list.getRecords().forEach(item -> item.setPassword(""));
-        return ResultUtils.success("查询成功", list);
+        return ResultMessage.success("查询成功").add("list",list);
     }
 }
