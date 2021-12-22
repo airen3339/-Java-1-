@@ -1,0 +1,15 @@
+package com.cy.role.mapper;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.cy.role.entity.Role;
+import org.apache.ibatis.annotations.Mapper;
+
+/**
+ * @author cy
+ * @program: WuYeManagementProgram
+ * @description:
+ * @date 2021-12-22 16:26:13
+ */
+@Mapper
+public interface RoleMapper extends BaseMapper<Role> {
+}
