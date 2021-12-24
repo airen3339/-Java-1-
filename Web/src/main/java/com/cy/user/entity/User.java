@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
@@ -32,6 +33,7 @@ public class User implements Serializable {
     //姓名
     private String userName;
     //电话
+    @NotBlank
     private String phone;
     //性别 0：女 1：男
     private String sex;
@@ -43,4 +45,5 @@ public class User implements Serializable {
     private String status;
     //0：启用 1：禁用
     private String isUsed;
+
 }

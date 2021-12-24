@@ -22,6 +22,4 @@ public class UserParam {
     private String userName;
     //电话
     private String phone;
-
-
 }

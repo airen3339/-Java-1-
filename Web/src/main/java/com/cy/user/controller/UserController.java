@@ -9,7 +9,6 @@ import com.cy.user.service.UserService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -64,7 +63,7 @@ public class UserController {
      */
 
     @PutMapping
-    public ResultMessage editUser(@RequestBody User user) {
+    public ResultMessage editUser(@RequestBody @Valid User user) {
         //判断登录名是否存在
         if (StringUtils.isNotEmpty(user.getLoginName())){
             QueryWrapper<User> wrapper = new QueryWrapper<>();
@@ -111,7 +110,7 @@ public class UserController {
      */
 
     @GetMapping("/list")
-    public ResultMessage listUsers(@Valid UserParam param , BindingResult result) {
+    public ResultMessage listUsers(@Valid UserParam param) {
 
         IPage<User> list = userService.list(param);
         list.getRecords().forEach(item -> item.setPassword(""));
