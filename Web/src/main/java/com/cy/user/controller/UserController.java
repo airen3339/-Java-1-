@@ -33,7 +33,7 @@ public class UserController {
      */
 
     @PostMapping
-    public ResultMessage addUser(@RequestBody User user) {
+    public ResultMessage addUser(@RequestBody @Valid User user) {
         //判断登录名是否存在
         if (StringUtils.isNotEmpty(user.getLoginName())){
             QueryWrapper<User> wrapper = new QueryWrapper<>();
