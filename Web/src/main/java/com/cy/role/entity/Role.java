@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
@@ -17,10 +18,21 @@ import java.io.Serializable;
 @Data
 @TableName("sys_role")
 public class Role implements Serializable {
+    /**
+     * 角色ID
+     * @ignore
+     */
     @TableId(type = IdType.AUTO)
     private Long roleId;
-    //角色名称
+
+    /**
+     * 角色名称
+     */
+    @NotBlank
     private String roleName;
-    //备注
+
+    /**
+     * 备注
+     */
     private String remark;
 }

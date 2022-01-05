@@ -1,15 +1,17 @@
 package com.cy.role.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.cy.CommonResult;
 import com.cy.role.entity.Role;
 import com.cy.role.entity.RoleParam;
 import com.cy.role.service.RoleService;
-import com.cy.utils.ResultUtils;
-import com.cy.utils.ResultVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 /**
+ * 角色信息管理
  * @author cy
  * @program: WuYeManagementProgram
  * @description: 角色管理控制器
@@ -23,6 +25,7 @@ public class RoleController {
     RoleService roleService;
 
     /**
+     * 查询员工角色
      * @param param
      * @return com.cy.utils.ResultVo
      * @description: 查询员工角色
@@ -30,12 +33,13 @@ public class RoleController {
      */
 
     @GetMapping("/list")
-    public ResultVo list(RoleParam param) {
+    public CommonResult<IPage<Role>> list(@Valid RoleParam param) {
         IPage<Role> list = roleService.list(param);
-        return ResultUtils.success("查询成功", list);
+        return CommonResult.success("查询成功", list);
     }
 
     /**
+     * 新增角色
      * @param role
      * @return com.cy.utils.ResultVo
      * @description: 新增角色
@@ -43,15 +47,16 @@ public class RoleController {
      */
 
     @PostMapping
-    public ResultVo addRole(@RequestBody Role role) {
+    public CommonResult<Role> addRole(@RequestBody @Valid Role role) {
         boolean saveFlag = roleService.save(role);
         if (saveFlag) {
-            return ResultUtils.success("新增角色成功");
+            return CommonResult.success("新增角色成功");
         }
-        return ResultUtils.success("新增角色失败");
+        return CommonResult.error("新增角色失败");
     }
 
     /**
+     * 编辑角色
      * @param role
      * @return com.cy.utils.ResultVo
      * @description: 编辑角色
@@ -59,20 +64,25 @@ public class RoleController {
      */
 
     @PutMapping
-    public ResultVo editRole(@RequestBody Role role) {
+    public CommonResult<Role> editRole(@RequestBody @Valid Role role) {
         boolean editFlag = roleService.save(role);
         if (editFlag) {
-            return ResultUtils.success("编辑角色成功");
+            return CommonResult.success("编辑角色成功");
         }
-        return ResultUtils.success("编辑角色失败");
+        return CommonResult.error("编辑角色失败");
     }
 
+    /**
+     * 根据角色Id删除角色
+     * @param roleId
+     * @return
+     */
     @DeleteMapping("/{roleId}")
-    public ResultVo deleteRole(@PathVariable Long roleId){
+    public CommonResult<Role> deleteRole(@PathVariable @Valid Long roleId){
         boolean removeFlag = roleService.removeById(roleId);
         if (removeFlag) {
-            return ResultUtils.success("删除角色成功");
+            return CommonResult.success("删除角色成功");
         }
-        return ResultUtils.success("删除角色成功");
+        return CommonResult.error("删除角色成功");
     }
 }

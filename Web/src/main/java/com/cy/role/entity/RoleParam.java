@@ -2,6 +2,8 @@ package com.cy.role.entity;
 
 import lombok.Data;
 
+import javax.validation.constraints.Min;
+
 /**
  * @author cy
  * @program: WuYeManagementProgram
@@ -11,10 +13,23 @@ import lombok.Data;
 @Data
 public class RoleParam {
 
-    //页容量
+
+    /**
+     * 页容量
+     * @required
+     */
+    @Min(value = 10)
     private Long pageSize;
-    //当前页
+
+    /**
+     * 当前页
+     * @required
+     */
+    @Min(value = 1)
     private Long currentPage;
-    //角色名称
+
+    /**
+     * 角色名称
+     */
     private String roleName;
 }

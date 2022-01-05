@@ -1,0 +1,14 @@
+{
+  "serverUrl": "http://localhost:8089",
+  "outPath": "src/main/resources/static/doc",
+  "isStrict": false,
+  "allInOne": true,
+  "createDebugPage": false,
+  "packageFilters": "com.cy.*.controller.*",
+  "style":"xt256",
+  "projectName": "小区物业后台管理系统",
+  "showAuthor":true,
+  "allInOneDocFileName":"index.html",
+  "requestExample":"false",
+  "responseExample":"false"
+}

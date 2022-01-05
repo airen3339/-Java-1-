@@ -2,7 +2,7 @@ package com.cy.user.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.cy.ResultMessage;
+import com.cy.CommonResult;
 import com.cy.user.entity.User;
 import com.cy.user.entity.UserParam;
 import com.cy.user.service.UserService;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 /**
+ * 员工信息管理
  * @author cy
  * @program: WuYeManagementProgram
  * @description: 员工管理控制器
@@ -26,6 +27,7 @@ public class UserController {
     private UserService userService;
 
     /**
+     * 添加员工
      * @param user
      * @return com.cy.utils.ResultVo
      * @description: 添加员工
@@ -33,14 +35,25 @@ public class UserController {
      */
 
     @PostMapping
-    public ResultMessage addUser(@RequestBody @Valid User user) {
+    public CommonResult<User> addUser(@RequestBody @Valid User user) {
+        QueryWrapper<User> wrapper = null;
         //判断登录名是否存在
         if (StringUtils.isNotEmpty(user.getLoginName())){
-            QueryWrapper<User> wrapper = new QueryWrapper<>();
+            wrapper = new QueryWrapper<>();
             wrapper.lambda().eq(User::getLoginName,user.getLoginName());
             User one = userService.getOne(wrapper);
             if (one != null){
-                return ResultMessage.fail(500,"登录名已存在");
+                return CommonResult.error(500,"登录名已存在");
+            }
+        }
+
+        //判断身份证是否存在
+        if (StringUtils.isNotEmpty(user.getIdCard())){
+            wrapper = new QueryWrapper<>();
+            wrapper.lambda().eq(User::getIdCard,user.getIdCard());
+            User one = userService.getOne(wrapper);
+            if (one != null){
+                return CommonResult.error(500,"身份证号已存在");
             }
         }
 
@@ -50,27 +63,27 @@ public class UserController {
         }
         boolean saveState = userService.save(user);
         if (saveState) {
-            return ResultMessage.success("新增员工成功");
+            return CommonResult.success("新增员工成功");
         }
-        return ResultMessage.success("新增员工失败");
+        return CommonResult.error("新增员工失败");
     }
 
     /**
+     * 编辑员工
      * @param user
      * @return com.cy.utils.ResultVo
      * @description: 编辑员工
      * @date 2021/12/20 19:22
      */
-
     @PutMapping
-    public ResultMessage editUser(@RequestBody @Valid User user) {
+    public CommonResult<User> editUser(@RequestBody @Valid User user) {
         //判断登录名是否存在
         if (StringUtils.isNotEmpty(user.getLoginName())){
             QueryWrapper<User> wrapper = new QueryWrapper<>();
             wrapper.lambda().eq(User::getLoginName,user.getLoginName());
             User one = userService.getOne(wrapper);
             if (one != null && !one.getUserId().equals(user.getUserId())){
-                return ResultMessage.fail(500,"登录名已存在");
+                return CommonResult.error(500,"登录名已存在");
             }
         }
 
@@ -81,12 +94,13 @@ public class UserController {
 
         boolean updateState = userService.updateById(user);
         if (updateState) {
-            return ResultMessage.success("编辑员工成功");
+            return CommonResult.success("编辑员工成功");
         }
-        return ResultMessage.success("编辑员工失败");
+        return CommonResult.success("编辑员工失败");
     }
 
     /**
+     * 删除员工
      * @param userId
      * @return com.cy.utils.ResultVo
      * @description
@@ -94,15 +108,16 @@ public class UserController {
      */
 
     @DeleteMapping("/{userId}")
-    public ResultMessage deleteUser(@PathVariable("userId") long userId) {
+    public CommonResult<User> deleteUser(@PathVariable("userId") long userId) {
         boolean removeState = userService.removeById(userId);
         if (removeState) {
-            return ResultMessage.success("删除员工成功");
+            return CommonResult.success("删除员工成功");
         }
-        return ResultMessage.success("删除员工失败");
+        return CommonResult.error("删除员工失败");
     }
 
     /***
+     * 员工列表查询
      * @description: 员工列表查询
      * @param param
      * @return com.cy.utils.ResultVo
@@ -110,10 +125,10 @@ public class UserController {
      */
 
     @GetMapping("/list")
-    public ResultMessage listUsers(@Valid UserParam param) {
+    public CommonResult<IPage<User>> listUsers(@Valid UserParam param) {
 
         IPage<User> list = userService.list(param);
         list.getRecords().forEach(item -> item.setPassword(""));
-        return ResultMessage.success("查询成功").add("list",list);
+        return CommonResult.success("员工列表数据获取成功",list);
     }
 }
