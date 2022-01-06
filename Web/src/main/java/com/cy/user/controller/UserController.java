@@ -128,7 +128,7 @@ public class UserController {
     public CommonResult<IPage<User>> listUsers(@Valid UserParam param) {
 
         IPage<User> list = userService.list(param);
-        list.getRecords().forEach(item -> item.setPassword(""));
+        list.getRecords().forEach(item -> item.setPassword("*********"));
         return CommonResult.success("员工列表数据获取成功",list);
     }
 }

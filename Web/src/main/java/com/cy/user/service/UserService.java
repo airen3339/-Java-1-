@@ -13,5 +13,5 @@ import com.cy.user.entity.UserParam;
  */
 public interface UserService extends IService<User> {
     //查询用户列表
-    IPage<User> list(UserParam parm);
+    IPage<User> list(UserParam param);
 }

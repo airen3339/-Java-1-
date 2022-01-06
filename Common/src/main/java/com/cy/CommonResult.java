@@ -67,6 +67,7 @@ public class CommonResult<T>
         return new CommonResult<>(ResultStatus.SUCCESS, msg,data);
     }
 
+
     public static <T> CommonResult<T> success(int code,String msg,T data)
     {
         return new CommonResult<>(code, msg, data);

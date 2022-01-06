@@ -18,18 +18,20 @@ import org.springframework.stereotype.Service;
  * @date 2021-12-22 16:27:37
  */
 @Service
-public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements RoleService {
+public class RoleServiceImpl extends ServiceImpl<RoleMapper,Role> implements RoleService {
+
+
     @Override
     public IPage<Role> list(RoleParam roleParam) {
-        QueryWrapper<Role> queryWrapper = new QueryWrapper<>();
-        if (StringUtils.isNotEmpty(roleParam.getRoleName())){
-            queryWrapper.lambda().like(Role::getRoleName,roleParam.getRoleName());
-        }
-
+        System.out.println(roleParam.getCurrentPage());
         IPage<Role> page = new Page<>();
         page.setCurrent(roleParam.getCurrentPage());
         page.setSize(roleParam.getPageSize());
 
-        return this.baseMapper.selectPage(page,queryWrapper);
+        QueryWrapper<Role> queryWrapper = new QueryWrapper<>();
+        if (StringUtils.isNotEmpty(roleParam.getRoleName())){
+            queryWrapper.lambda().like(Role::getRoleName,roleParam.getRoleName());
+        }
+        return this.page(page,queryWrapper);
     }
 }

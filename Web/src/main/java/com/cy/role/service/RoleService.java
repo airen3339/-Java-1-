@@ -12,5 +12,6 @@ import com.cy.role.entity.RoleParam;
  * @date 2021-12-22 16:27:10
  */
 public interface RoleService extends IService<Role> {
+    //查询角色列表
     IPage<Role> list(RoleParam roleParam);
 }

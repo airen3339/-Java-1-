@@ -20,18 +20,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
     @Override
-    public IPage<User> list(UserParam parm) {
+    public IPage<User> list(UserParam param) {
         //构建分页对象
         IPage<User> page = new Page<>();
-        page.setSize(parm.getPageSize());
-        page.setCurrent(parm.getCurrentPage());
+        page.setSize(param.getPageSize());
+        page.setCurrent(param.getCurrentPage());
         //构造前端查询条件
         QueryWrapper<User> query = new QueryWrapper<>();
-        if(StringUtils.isNotEmpty(parm.getPhone())){
-            query.lambda().like(User::getPhone,parm.getPhone());
+        if(StringUtils.isNotEmpty(param.getPhone())){
+            query.lambda().like(User::getPhone, param.getPhone());
         }
-        if(StringUtils.isNotEmpty(parm.getUserName())){
-            query.lambda().like(User::getUserName,parm.getUserName());
+        if(StringUtils.isNotEmpty(param.getUserName())){
+            query.lambda().like(User::getUserName, param.getUserName());
         }
         return this.page(page,query);
     }

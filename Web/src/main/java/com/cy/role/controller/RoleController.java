@@ -24,6 +24,7 @@ public class RoleController {
     @Autowired
     RoleService roleService;
 
+
     /**
      * 查询员工角色
      * @param param
@@ -33,7 +34,7 @@ public class RoleController {
      */
 
     @GetMapping("/list")
-    public CommonResult<IPage<Role>> list(@Valid RoleParam param) {
+    public CommonResult<IPage<Role>> list(RoleParam param) {
         IPage<Role> list = roleService.list(param);
         return CommonResult.success("查询成功", list);
     }
@@ -65,7 +66,7 @@ public class RoleController {
 
     @PutMapping
     public CommonResult<Role> editRole(@RequestBody @Valid Role role) {
-        boolean editFlag = roleService.save(role);
+        boolean editFlag = roleService.updateById(role);
         if (editFlag) {
             return CommonResult.success("编辑角色成功");
         }
@@ -83,6 +84,6 @@ public class RoleController {
         if (removeFlag) {
             return CommonResult.success("删除角色成功");
         }
-        return CommonResult.error("删除角色成功");
+        return CommonResult.error("删除角色失败");
     }
 }
