@@ -22,7 +22,7 @@ import javax.validation.Valid;
 public class RoleController {
 
     @Autowired
-    RoleService roleService;
+    private RoleService roleService;
 
 
     /**
@@ -34,7 +34,7 @@ public class RoleController {
      */
 
     @GetMapping("/list")
-    public CommonResult<IPage<Role>> list(RoleParam param) {
+    public CommonResult<IPage<Role>> list(@Valid RoleParam param) {
         IPage<Role> list = roleService.list(param);
         return CommonResult.success("查询成功", list);
     }

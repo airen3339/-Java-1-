@@ -3,6 +3,7 @@ package com.cy.user.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.cy.valid.listValue;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -61,6 +62,7 @@ public class User implements Serializable {
      * 性别 0：女 1：男
      */
     @NotBlank
+    @listValue(values = {"0","1"})
     private String sex;
 
     /**
@@ -75,18 +77,21 @@ public class User implements Serializable {
     /**
      * 是否是管理员 0：不是 1：是
      */
+    @listValue(values = {"0","1"})
     private String isAdmin;
 
     /**
      * 0：在职  1：离职
      */
     @NotBlank
+    @listValue(values = {"0","1"})
     private String status;
 
     /**
      * 0：启用 1：禁用
      */
     @NotBlank
+    @listValue(values = {"0","1"})
     private String isUsed;
 
 }

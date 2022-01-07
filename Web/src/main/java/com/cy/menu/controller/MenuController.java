@@ -1,0 +1,87 @@
+package com.cy.menu.controller;
+
+import com.cy.CommonResult;
+import com.cy.menu.entity.Menu;
+import com.cy.menu.service.MenuService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
+
+/**
+ * 权限菜单信息管理
+ * @author cy
+ * @program: WuYeManagementProgram
+ * @description: 权限菜单信息管理
+ * @date 2022-01-06 17:55:03
+ */
+@RestController
+@RequestMapping("api/menu")
+public class MenuController {
+    @Autowired
+    private MenuService menuService;
+
+    /**
+     * 新增菜单
+     * @param menu
+     * @return
+     */
+    @PostMapping
+    public CommonResult<Menu> addMenu(@RequestBody @Valid Menu menu){
+        boolean saveFlag = menuService.save(menu);
+        if (saveFlag) {
+            return CommonResult.success("新增菜单成功");
+        }
+        return CommonResult.error("新增菜单失败");
+    }
+
+    /**
+     * 编辑菜单
+     * @param menu
+     * @return
+     */
+    @PutMapping
+    public CommonResult<Menu> editMenu(@RequestBody @Valid Menu menu){
+        boolean editFlag = menuService.updateById(menu);
+        if (editFlag) {
+            return CommonResult.success("编辑菜单成功");
+        }
+        return CommonResult.error("编辑菜单失败");
+    }
+
+    /**
+     * 删除菜单
+     * @param menuId
+     * @return
+     */
+    @DeleteMapping("/{menuId}")
+    public CommonResult<Menu> deleteMenu(@PathVariable @Valid String menuId){
+        boolean editFlag = menuService.removeById(menuId);
+        if (editFlag) {
+            return CommonResult.success("删除菜单成功");
+        }
+        return CommonResult.error("删除菜单失败");
+    }
+
+    /**
+     * 查询树形表格数据
+     * @return
+     */
+    @GetMapping("/list")
+    public CommonResult<List<Menu>> list(){
+        List<Menu> list = menuService.getList();
+        return CommonResult.success("查询成功",list);
+    }
+
+
+    /**
+     * 获取上级菜单
+     * @return
+     */
+    @GetMapping("/parent")
+    public CommonResult<List<Menu>> getParent(){
+        List<Menu> parentList = menuService.getParentList();
+        return CommonResult.success("查询成功",parentList);
+    }
+}
