@@ -12,10 +12,13 @@ import java.lang.annotation.*;
  */
 @Documented
 @Constraint(
+
         validatedBy = { listValueConstraint.class}
 )
 @Target({ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.PARAMETER, ElementType.TYPE_USE})
 @Retention(RetentionPolicy.RUNTIME)
+
+//@PropertySource(value = "classpath:ValidationMessages.properties", encoding = "utf-8")
 public @interface listValue {
     String message() default "{com.cy.valid.listValue.message}";
 

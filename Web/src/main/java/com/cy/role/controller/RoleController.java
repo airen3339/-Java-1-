@@ -36,7 +36,7 @@ public class RoleController {
     @GetMapping("/list")
     public CommonResult<IPage<Role>> list(@Valid RoleParam param) {
         IPage<Role> list = roleService.list(param);
-        return CommonResult.success("查询成功", list);
+        return CommonResult.success("角色列表查询成功", list);
     }
 
     /**

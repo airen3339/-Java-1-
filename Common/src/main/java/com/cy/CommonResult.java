@@ -105,7 +105,7 @@ public class CommonResult<T>
     {
         public static final int SUCCESS = 200;
 
-        public static final int FAIL = 400;
+        public static final int FAIL = 500;
     }
 
 }

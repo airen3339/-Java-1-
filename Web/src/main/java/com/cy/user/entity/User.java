@@ -77,7 +77,8 @@ public class User implements Serializable {
     /**
      * 是否是管理员 0：不是 1：是
      */
-    @listValue(values = {"0","1"})
+    //@listValue(values = {"0","1"})
+    //@NotBlank
     private String isAdmin;
 
     /**

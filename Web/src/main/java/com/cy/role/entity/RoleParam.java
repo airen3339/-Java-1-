@@ -3,6 +3,7 @@ package com.cy.role.entity;
 import lombok.Data;
 
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author cy
@@ -19,6 +20,7 @@ public class RoleParam {
      * @required
      */
     @Min(value = 10)
+    @NotNull
     private Long pageSize;
 
     /**
@@ -26,6 +28,7 @@ public class RoleParam {
      * @required
      */
     @Min(value = 1)
+    @NotNull
     private Long currentPage;
 
     /**

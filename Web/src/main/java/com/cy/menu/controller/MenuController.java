@@ -6,7 +6,6 @@ import com.cy.menu.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -28,7 +27,7 @@ public class MenuController {
      * @return
      */
     @PostMapping
-    public CommonResult<Menu> addMenu(@RequestBody @Valid Menu menu){
+    public CommonResult<Menu> addMenu(@RequestBody Menu menu){
         boolean saveFlag = menuService.save(menu);
         if (saveFlag) {
             return CommonResult.success("新增菜单成功");
@@ -42,7 +41,7 @@ public class MenuController {
      * @return
      */
     @PutMapping
-    public CommonResult<Menu> editMenu(@RequestBody @Valid Menu menu){
+    public CommonResult<Menu> editMenu(@RequestBody Menu menu){
         boolean editFlag = menuService.updateById(menu);
         if (editFlag) {
             return CommonResult.success("编辑菜单成功");
@@ -56,7 +55,7 @@ public class MenuController {
      * @return
      */
     @DeleteMapping("/{menuId}")
-    public CommonResult<Menu> deleteMenu(@PathVariable @Valid String menuId){
+    public CommonResult<Menu> deleteMenu(@PathVariable String menuId){
         boolean editFlag = menuService.removeById(menuId);
         if (editFlag) {
             return CommonResult.success("删除菜单成功");
@@ -82,6 +81,6 @@ public class MenuController {
     @GetMapping("/parent")
     public CommonResult<List<Menu>> getParent(){
         List<Menu> parentList = menuService.getParentList();
-        return CommonResult.success("查询成功",parentList);
+        return CommonResult.success("上级菜单数据查询成功",parentList);
     }
 }

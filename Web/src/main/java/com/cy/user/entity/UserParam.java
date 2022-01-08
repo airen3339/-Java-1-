@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 /**
  * 员工分页
@@ -23,6 +24,7 @@ public class UserParam {
      * @required
      */
     @Min(value = 10)
+    @NotNull
     private Long pageSize;
 
     /**
@@ -30,6 +32,7 @@ public class UserParam {
      * @required
      */
     @Min(value = 1)
+    @NotNull
     private Long currentPage;
 
     /**

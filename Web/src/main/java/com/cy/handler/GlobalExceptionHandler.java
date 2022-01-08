@@ -1,6 +1,6 @@
 package com.cy.handler;
 
-import com.cy.ResultMessage;
+import com.cy.CommonResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -18,56 +18,55 @@ import java.util.stream.Collectors;
 
 /**
  * @author cy
- * @program: newWuye
+ * @program: WuYeManagementProgram
  * @description: 数据校验异常返回类
  * @date 2021-12-22 23:23:16
  */
 @Slf4j
-@RestControllerAdvice(basePackages = "com.cy.user.controller")
+@RestControllerAdvice(basePackages = {"com.cy.user.controller","com.cy.role.controller","com.cy.menu.controller"})
 public class GlobalExceptionHandler {
     // 处理校验失败异常
     @ExceptionHandler({MethodArgumentNotValidException.class})
-    public ResultMessage handleValidateException(MethodArgumentNotValidException e) {
-        System.out.println("MethodArgumentNotValidException");
+    public CommonResult<Map<String, String>> handleValidateException(MethodArgumentNotValidException e) {
 
         BindingResult bindingResult = e.getBindingResult();
         Map<String, String> errorMap = new HashMap<>(8);
         // 将校验错误字段和错误信息提取到map中
         bindingResult.getFieldErrors().forEach(item -> errorMap.put(item.getField(),item.getDefaultMessage()));
-
-        return ResultMessage.fail(400,"数据校验出错").add("error", errorMap);
+        log.error(String.valueOf(errorMap));
+        return CommonResult.error(400,"数据校验出错",errorMap);
 
     }
     // 处理校验失败异常
     @ExceptionHandler({BindException.class})
-    public ResultMessage handleValidateException1(BindException e) {
+    public CommonResult<Map<String, String>> handleValidateException1(BindException e) {
 
         BindingResult bindingResult = e.getBindingResult();
         Map<String, String> errorMap = new HashMap<>(8);
         // 将校验错误字段和错误信息提取到map中
         bindingResult.getFieldErrors().forEach(item -> errorMap.put(item.getField(),item.getDefaultMessage()));
 
-        return ResultMessage.fail(400,"数据校验出错123123").add("error", errorMap);
+        return CommonResult.error(400,"数据校验出错",errorMap);
 
     }
 
     // 处理校验失败异常
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResultMessage handleValidException(ConstraintViolationException e){
+    public CommonResult<Map<Path, String>> handleValidException(ConstraintViolationException e){
 
         // 获取异常信息
         Set<ConstraintViolation<?>> constraintViolations = e.getConstraintViolations();
         // 将异常信息收集到Map，key为校验失败的字段，value为失败原因
         Map<Path, String> errorMap = constraintViolations.stream().collect(Collectors.toMap(ConstraintViolation::getPropertyPath, ConstraintViolation::getMessage));
         // 返回校验失败信息
-        return ResultMessage.fail(400, "数据校验出错").add("errorMap", errorMap);
+        return CommonResult.error(400,"数据校验出错",errorMap);
     }
 
     // 处理其他异常
     @ExceptionHandler(Exception.class)
-    public ResultMessage handleOtherException(Exception e) {
+    public CommonResult<Exception> handleOtherException(Exception e) {
         System.out.println("Exception");
         log.error(e.getMessage()+"------"+e.getClass());
-        return ResultMessage.fail(e.getMessage());
+        return CommonResult.error(e.getMessage());
     }
 }

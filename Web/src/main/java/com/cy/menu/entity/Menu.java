@@ -33,6 +33,12 @@ public class Menu implements Serializable {
     private Long parentId;
 
     /**
+     * 上级菜单名称
+     */
+    private String parentName;
+
+
+    /**
      * 菜单名称
      */
     private String menuLabel;
@@ -73,20 +79,20 @@ public class Menu implements Serializable {
     private String remark;
 
     /**
-     * 上级菜单名称
-     */
-    private String parentName;
-
-    /**
      * 序号
      */
     private Integer orderNum;
 
-    //不属于数据库表中的字段，需要排除
     /**
      * 权限列表
      *
      */
     @TableField(exist = false)
     private List<Menu> children = new ArrayList<>();
+
+    /**
+     * 用于判断图标的增减
+     */
+    @TableField(exist = false)
+    private Boolean open;
 }
