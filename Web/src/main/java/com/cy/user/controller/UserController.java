@@ -3,8 +3,8 @@ package com.cy.user.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.cy.CommonResult;
-import com.cy.user.entity.User;
-import com.cy.user.entity.UserParam;
+import com.cy.config.jwt.JwtUtils;
+import com.cy.user.entity.*;
 import com.cy.user.service.UserService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +25,51 @@ import javax.validation.Valid;
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private JwtUtils jwtUtils;
+
+
+    /**
+     * 获取用户信息
+     * @param user
+     * @return
+     */
+    @GetMapping("/getInfo")
+    public CommonResult<UserInfo> getInfo(User user){
+        User service = userService.getById(user.getUserId());
+        UserInfo userInfo = new UserInfo();
+        userInfo.setId(service.getUserId());
+        userInfo.setName(service.getUserName());
+        userInfo.setAvatar("https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
+        return CommonResult.success("获取用户信息成功",userInfo);
+    }
+
+    /**
+     * 登录
+     * @param loginParam
+     * @return
+     */
+    @PostMapping("/login")
+    public CommonResult<LoginResult> login(@RequestBody @Valid LoginParam loginParam){
+        String password = DigestUtils.md5DigestAsHex(loginParam.getPassword().getBytes());
+        QueryWrapper<User> loginParamQueryWrapper = new QueryWrapper<>();
+        loginParamQueryWrapper.lambda().eq(User::getLoginName,loginParam.getUsername())
+                .eq(User::getPassword,loginParam.getPassword());
+
+        User user = userService.getOne(loginParamQueryWrapper);
+        if (user == null) {
+            return CommonResult.error("用户名不存在或密码错误");
+        }
+        //如果用户存在，生成token返回给前端
+        String token = jwtUtils.generateToken(user.getLoginName());
+        //获取生成的token的过期时间
+        Long expireTime =  jwtUtils.getExpireTime(token,jwtUtils.getSecret());
+        LoginResult loginResult = new LoginResult();
+        loginResult.setUserId(user.getUserId());
+        loginResult.setToken(token);
+        loginResult.setExpireTime(expireTime);
+        return CommonResult.success("登录成功",loginResult);
+    }
 
     /**
      * 添加员工

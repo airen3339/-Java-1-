@@ -1,4 +1,4 @@
-package com.cy.config;
+package com.cy.config.web;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
