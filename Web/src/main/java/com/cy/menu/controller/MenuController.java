@@ -1,5 +1,6 @@
 package com.cy.menu.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.cy.CommonResult;
 import com.cy.menu.entity.Menu;
 import com.cy.menu.service.MenuService;
@@ -56,6 +57,14 @@ public class MenuController {
      */
     @DeleteMapping("/{menuId}")
     public CommonResult<Menu> deleteMenu(@PathVariable String menuId){
+        // 如果有下级则不能直接删除
+        QueryWrapper<Menu> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(Menu::getParentId,menuId);
+        List<Menu> list = menuService.list(queryWrapper);
+        if (list.size() > 0){
+            return CommonResult.error("该菜单存在下级，不能直接删除");
+        }
+
         boolean editFlag = menuService.removeById(menuId);
         if (editFlag) {
             return CommonResult.success("删除菜单成功");

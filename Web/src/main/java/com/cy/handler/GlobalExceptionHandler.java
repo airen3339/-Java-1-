@@ -67,6 +67,6 @@ public class GlobalExceptionHandler {
     public CommonResult<Exception> handleOtherException(Exception e) {
         System.out.println("Exception");
         log.error(e.getMessage()+"------"+e.getClass());
-        return CommonResult.error(e.getMessage());
+        return CommonResult.error("系统未知异常，请联系管理员");
     }
 }
