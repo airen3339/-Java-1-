@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  * @date 2021-12-22 23:23:16
  */
 @Slf4j
-@RestControllerAdvice(basePackages = {"com.cy.user.controller","com.cy.role.controller","com.cy.menu.controller"})
+@RestControllerAdvice(basePackages = {"com.cy.systemManagement.user.controller","com.cy.systemManagement.role.controller","com.cy.systemManagement.menu.controller"})
 public class GlobalExceptionHandler {
     // 处理校验失败异常
     @ExceptionHandler({MethodArgumentNotValidException.class})
@@ -34,7 +34,7 @@ public class GlobalExceptionHandler {
         // 将校验错误字段和错误信息提取到map中
         bindingResult.getFieldErrors().forEach(item -> errorMap.put(item.getField(),item.getDefaultMessage()));
         log.error(String.valueOf(errorMap));
-        return CommonResult.error(400,"数据校验出错",errorMap);
+        return CommonResult.error(400,"数据出错",errorMap);
 
     }
     // 处理校验失败异常
@@ -46,7 +46,7 @@ public class GlobalExceptionHandler {
         // 将校验错误字段和错误信息提取到map中
         bindingResult.getFieldErrors().forEach(item -> errorMap.put(item.getField(),item.getDefaultMessage()));
 
-        return CommonResult.error(400,"数据校验出错",errorMap);
+        return CommonResult.error(400,"数据出错",errorMap);
 
     }
 
@@ -59,7 +59,7 @@ public class GlobalExceptionHandler {
         // 将异常信息收集到Map，key为校验失败的字段，value为失败原因
         Map<Path, String> errorMap = constraintViolations.stream().collect(Collectors.toMap(ConstraintViolation::getPropertyPath, ConstraintViolation::getMessage));
         // 返回校验失败信息
-        return CommonResult.error(400,"数据校验出错",errorMap);
+        return CommonResult.error(400,"数据出错",errorMap);
     }
 
     // 处理其他异常
