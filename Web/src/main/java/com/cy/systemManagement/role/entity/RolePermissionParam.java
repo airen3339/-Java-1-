@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * @author cy
  * @program: WuYeManagementProgram
- * @description:
+ * @description: 添加角色权限类
  * @date 2022-01-13 21:35:13
  */
 @Data

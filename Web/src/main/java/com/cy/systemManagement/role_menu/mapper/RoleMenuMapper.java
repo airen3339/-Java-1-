@@ -2,7 +2,6 @@ package com.cy.systemManagement.role_menu.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.cy.systemManagement.role_menu.entity.RoleMenu;
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -13,7 +12,6 @@ import java.util.List;
  * @description:
  * @date 2022-01-13 18:41:24
  */
-@Mapper
 public interface RoleMenuMapper extends BaseMapper<RoleMenu> {
 
     /**

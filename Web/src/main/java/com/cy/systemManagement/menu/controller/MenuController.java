@@ -29,11 +29,16 @@ public class MenuController {
      */
     @PostMapping
     public CommonResult<Menu> addMenu(@RequestBody Menu menu){
-        boolean saveFlag = menuService.save(menu);
-        if (saveFlag) {
-            return CommonResult.success("新增菜单成功");
+        int i = menuService.menuIsExist(menu.getParentId(), menu.getMenuLabel());
+        if (i == 1){
+            return CommonResult.error("新增类型已存在");
+        }else {
+            boolean saveFlag = menuService.save(menu);
+            if (saveFlag) {
+                return CommonResult.success("新增菜单成功");
+            }
+            return CommonResult.error("新增菜单失败");
         }
-        return CommonResult.error("新增菜单失败");
     }
 
     /**

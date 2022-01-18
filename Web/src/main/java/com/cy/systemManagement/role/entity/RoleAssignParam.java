@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 /**
  * @author cy
  * @program: WuYeManagementProgram
- * @description:
+ * @description: 角色分配参数类
  * @date 2022-01-13 19:11:30
  */
 @Data

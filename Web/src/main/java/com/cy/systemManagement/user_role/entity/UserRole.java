@@ -13,7 +13,7 @@ import java.io.Serializable;
 /**
  * @author cy
  * @program: WuYeManagementProgram
- * @description:
+ * @description: 用户角色实体类
  * @date 2022-01-16 19:41:33
  */
 @Data

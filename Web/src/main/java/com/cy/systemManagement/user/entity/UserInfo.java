@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * @author cy
  * @program: WuYeManagementProgram
- * @description:
+ * @description: 员工信息类
  * @date 2022-01-12 21:39:57
  */
 @Data

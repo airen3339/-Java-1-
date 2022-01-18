@@ -6,6 +6,7 @@ import com.cy.systemManagement.menu.entity.MakeMenuTree;
 import com.cy.systemManagement.menu.entity.Menu;
 import com.cy.systemManagement.menu.mapper.MenuMapper;
 import com.cy.systemManagement.menu.service.MenuService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -19,6 +20,9 @@ import java.util.List;
  */
 @Service
 public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements MenuService  {
+    @Autowired
+    private MenuService menuService;
+
     /**
      * 获取菜单列表树数据
      */
@@ -73,5 +77,20 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     @Override
     public List<Menu> getMenuListByRoleId(Long roleId) {
         return this.baseMapper.getMenuListByRoleId(roleId);
+    }
+
+    @Override
+    public int menuIsExist(Long parentId , String menuLabel) {
+        QueryWrapper<Menu> menuQueryWrapper = new QueryWrapper<>();
+        menuQueryWrapper.lambda().eq(Menu::getParentId,parentId);
+        List<Menu> list = menuService.list(menuQueryWrapper);
+        int flag = 0;
+        for (Menu menu: list) {
+            if (menu.getMenuLabel().equals(menuLabel)) {
+                flag = 1;
+                break;
+            }
+        }
+        return flag;
     }
 }

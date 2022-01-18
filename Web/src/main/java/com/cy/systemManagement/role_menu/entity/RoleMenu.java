@@ -10,7 +10,7 @@ import java.io.Serializable;
 /**
  * @author cy
  * @program: WuYeManagementProgram
- * @description:
+ * @description: 角色菜单类
  * @date 2022-01-13 18:38:56
  */
 @Data

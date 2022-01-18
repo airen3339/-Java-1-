@@ -2,7 +2,6 @@ package com.cy.systemManagement.menu.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.cy.systemManagement.menu.entity.Menu;
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -13,7 +12,6 @@ import java.util.List;
  * @description: 权限菜单接口
  * @date 2022-01-06 15:23:58
  */
-@Mapper
 public interface MenuMapper extends BaseMapper<Menu> {
 
     /**

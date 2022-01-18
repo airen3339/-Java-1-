@@ -1,5 +1,6 @@
 package com.cy.systemManagement.role.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.cy.CommonResult;
 import com.cy.systemManagement.role.entity.*;
@@ -11,6 +12,7 @@ import javax.validation.Valid;
 
 /**
  * 角色信息管理
+ *
  * @author cy
  * @program: WuYeManagementProgram
  * @description: 角色管理控制器
@@ -26,28 +28,31 @@ public class RoleController {
 
     /**
      * 分配权限保存
+     *
      * @param param
      * @return
      */
     @PostMapping("/saveAssignRole")
-    public CommonResult<String> saveAssignRole(@RequestBody @Valid RolePermissionParam param){
-        roleService.saveAssignRole(param.getRoleId(),param.getIdList());
+    public CommonResult<String> saveAssignRole(@RequestBody @Valid RolePermissionParam param) {
+        roleService.saveAssignRole(param.getRoleId(), param.getIdList());
         return CommonResult.success("分配权限成功!");
     }
 
     /**
      * 权限树回显查询
+     *
      * @param roleParam
      * @return
      */
     @GetMapping("/getAssignPermissionTree")
-    public CommonResult<RolePermissionVo> getAssignMenuTree(@Valid RoleAssignParam roleParam){
+    public CommonResult<RolePermissionVo> getAssignMenuTree(@Valid RoleAssignParam roleParam) {
         RolePermissionVo assignMenuTree = roleService.getAssignTree(roleParam);
-        return CommonResult.success("权限树查询成功",assignMenuTree);
+        return CommonResult.success("权限树查询成功", assignMenuTree);
     }
 
     /**
      * 查询员工角色
+     *
      * @param param
      * @return com.cy.utils.ResultVo
      * @description: 查询员工角色
@@ -62,6 +67,7 @@ public class RoleController {
 
     /**
      * 新增角色
+     *
      * @param role
      * @return com.cy.utils.ResultVo
      * @description: 新增角色
@@ -70,15 +76,23 @@ public class RoleController {
 
     @PostMapping
     public CommonResult<Role> addRole(@RequestBody @Valid Role role) {
-        boolean saveFlag = roleService.save(role);
-        if (saveFlag) {
-            return CommonResult.success("新增角色成功");
+        QueryWrapper<Role> roleQueryWrapper = new QueryWrapper<>();
+        roleQueryWrapper.lambda().eq(Role::getRoleName, role.getRoleName());
+        Role one = roleService.getOne(roleQueryWrapper);
+        if (one != null) {
+            return CommonResult.error("角色已存在");
+        } else {
+            boolean saveFlag = roleService.save(role);
+            if (saveFlag) {
+                return CommonResult.success("新增角色成功");
+            }
+            return CommonResult.error("新增角色失败");
         }
-        return CommonResult.error("新增角色失败");
     }
 
     /**
      * 编辑角色
+     *
      * @param role
      * @return com.cy.utils.ResultVo
      * @description: 编辑角色
@@ -96,11 +110,12 @@ public class RoleController {
 
     /**
      * 根据角色Id删除角色
+     *
      * @param roleId
      * @return
      */
     @DeleteMapping("/{roleId}")
-    public CommonResult<Role> deleteRole(@PathVariable @Valid Long roleId){
+    public CommonResult<Role> deleteRole(@PathVariable @Valid Long roleId) {
         boolean removeFlag = roleService.removeById(roleId);
         if (removeFlag) {
             return CommonResult.success("删除角色成功");

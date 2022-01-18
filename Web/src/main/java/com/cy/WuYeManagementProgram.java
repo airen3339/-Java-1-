@@ -1,5 +1,6 @@
 package com.cy;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import springfox.documentation.oas.annotations.EnableOpenApi;
@@ -12,6 +13,7 @@ import springfox.documentation.oas.annotations.EnableOpenApi;
  */
 @EnableOpenApi
 @SpringBootApplication
+@MapperScan(basePackages = "com.cy.*.*.mapper")
 public class WuYeManagementProgram {
     public static void main(String[] args) {
         SpringApplication.run(WuYeManagementProgram.class);

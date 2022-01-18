@@ -23,7 +23,14 @@ import java.util.stream.Collectors;
  * @date 2021-12-22 23:23:16
  */
 @Slf4j
-@RestControllerAdvice(basePackages = {"com.cy.systemManagement.user.controller","com.cy.systemManagement.role.controller","com.cy.systemManagement.menu.controller"})
+@RestControllerAdvice(basePackages = {
+        "com.cy.systemManagement.user.controller",
+        "com.cy.systemManagement.role.controller",
+        "com.cy.systemManagement.menu.controller",
+        "com.cy.homeManagement.house_building.controller",
+        "com.cy.homeManagement.house_unit.controller.HouseUnitController",
+        "com.cy.homeManagement.house_list.controller.HouseListController"
+})
 public class GlobalExceptionHandler {
     // 处理校验失败异常
     @ExceptionHandler({MethodArgumentNotValidException.class})

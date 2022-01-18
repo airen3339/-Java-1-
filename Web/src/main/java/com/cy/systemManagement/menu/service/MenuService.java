@@ -38,4 +38,6 @@ public interface MenuService extends IService<Menu> {
      * @return
      */
     List<Menu> getMenuListByRoleId(Long roleId);
+
+    int menuIsExist(Long parentId,String menuLabel );
 }

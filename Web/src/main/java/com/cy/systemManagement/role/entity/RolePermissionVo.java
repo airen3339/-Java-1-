@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * @author cy
  * @program: WuYeManagementProgram
- * @description:
+ * @description: 角色权限信息返回类
  * @date 2022-01-13 19:12:25
  */
 @Data
