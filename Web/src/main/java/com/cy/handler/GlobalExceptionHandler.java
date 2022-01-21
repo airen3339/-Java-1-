@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
         "com.cy.homeManagement.house_building.controller",
         "com.cy.homeManagement.house_unit.controller.HouseUnitController",
         "com.cy.homeManagement.house_list.controller.HouseListController",
-        "com.cy.parkManagement.park_list.controller"
+        "com.cy.parkManagement.park_list.controller",
 })
 public class GlobalExceptionHandler {
     // 处理校验失败异常

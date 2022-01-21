@@ -4,6 +4,7 @@
     <file url="file://$PROJECT_DIR$/Web/src/main/resources/Mapper/homeManagement/HouseBuildingMapper.xml" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/Web/src/main/resources/Mapper/homeManagement/HouseListMapper.xml" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/Web/src/main/resources/Mapper/homeManagement/HouseUnitMapper.xml" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/Web/src/main/resources/Mapper/liveManagement/LiveUserMapper.xml" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/Web/src/main/resources/Mapper/systemManagement/MenuMapper.xml" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/Web/src/main/resources/Mapper/systemManagement/RoleMenuMapper.xml" dialect="MySQL" />
   </component>

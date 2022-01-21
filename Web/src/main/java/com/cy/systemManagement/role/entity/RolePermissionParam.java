@@ -2,6 +2,8 @@ package com.cy.systemManagement.role.entity;
 
 import lombok.Data;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -15,10 +17,13 @@ public class RolePermissionParam {
     /**
      * 角色Id
      */
+    @NotNull
     private Long roleId;
 
     /**
      * 选中的权限Id
      */
+    @NotNull
+    @Valid
     List<Long> idList;
 }

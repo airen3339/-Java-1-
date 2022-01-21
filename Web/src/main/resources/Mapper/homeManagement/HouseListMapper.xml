@@ -20,4 +20,8 @@
             and hl.status like concat('%',#{status},'%')
         </if>
     </select>
+    <select id="getHouseListByUnitId" resultType="com.cy.homeManagement.house_list.entity.HouseList">
+        SELECT * FROM house_list
+        WHERE unit_id = #{unitId}
+    </select>
 </mapper>

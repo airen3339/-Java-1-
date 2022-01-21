@@ -23,7 +23,6 @@ public class UserParam {
      * 页容量
      * @required
      */
-    @Min(value = 10)
     @NotNull
     private Long pageSize;
 

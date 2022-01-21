@@ -23,7 +23,6 @@ public class ParkListParam {
     /**
      * 页容量
      */
-    @Min(10)
     @NotNull
     private Long pageSize;
 

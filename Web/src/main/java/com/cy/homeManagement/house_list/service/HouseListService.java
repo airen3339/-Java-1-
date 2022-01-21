@@ -18,4 +18,11 @@ public interface HouseListService extends IService<HouseList> {
      * @return
      */
     IPage<HouseList> getList(ListParam param);
+
+    /**
+     * 新增房屋
+     * @param houseList
+     * @return
+     */
+    int saveHouseList(HouseList houseList);
 }

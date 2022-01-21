@@ -44,7 +44,6 @@ public class ListParam implements Serializable {
     /**
      * 页容量
      */
-    @Min(10)
     @NotNull
     private Long pageSize;
 }

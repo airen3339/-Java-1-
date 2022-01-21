@@ -5,6 +5,7 @@ import com.cy.CommonResult;
 import com.cy.homeManagement.house_list.entity.HouseList;
 import com.cy.homeManagement.house_list.entity.ListParam;
 import com.cy.homeManagement.house_list.service.HouseListService;
+import com.cy.homeManagement.house_unit.serveie.HouseUnitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,8 @@ import javax.validation.Valid;
 public class HouseListController {
     @Autowired
     private HouseListService houseListService;
-
+    @Autowired
+    private HouseUnitService houseUnitService;
     /**
      * 房屋查询列表
      * @param param
@@ -40,11 +42,14 @@ public class HouseListController {
      */
     @PostMapping
     public CommonResult<String> addHouse(@RequestBody @Valid HouseList houseList){
-        boolean saveState = houseListService.save(houseList);
-        if(saveState){
+        int saveState = houseListService.saveHouseList(houseList);
+        if(saveState == 1){
             return CommonResult.success("新增房屋成功!");
+        }else if (saveState == 2){
+            return CommonResult.error("房屋编号已存在");
+        }else {
+            return CommonResult.error("新增房屋失败!");
         }
-        return CommonResult.error("新增房屋失败!");
     }
 
     /**

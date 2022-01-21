@@ -1,5 +1,6 @@
 package com.cy.homeManagement.house_list.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -8,6 +9,8 @@ import com.cy.homeManagement.house_list.entity.ListParam;
 import com.cy.homeManagement.house_list.mapper.HouseListMapper;
 import com.cy.homeManagement.house_list.service.HouseListService;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author cy
@@ -29,5 +32,26 @@ public class HouseListServiceImpl extends ServiceImpl<HouseListMapper, HouseList
         page.setCurrent(param.getCurrentPage());
         page.setSize(param.getPageSize());
         return this.baseMapper.getList(page,param.getBuildName(),param.getUnitName(),param.getHouseNum(),param.getStatus());
+    }
+
+    /**
+     * 新增房屋
+     *
+     * @param houseList
+     * @return
+     */
+    @Override
+    public int saveHouseList(HouseList houseList) {
+        int saveStatus = 1;
+        QueryWrapper<HouseList> houseListQueryWrapper = new QueryWrapper<>();
+        houseListQueryWrapper.lambda().eq(HouseList::getUnitId,houseList.getUnitId());
+        List<HouseList> houseListByUnitId = this.baseMapper.getHouseListByUnitId(houseList.getUnitId());
+        for (HouseList houseList1: houseListByUnitId) {
+            if (houseList1.getHouseNum().equals(houseList.getHouseNum())){
+                return saveStatus = 2;
+            }
+        }
+        saveStatus = this.baseMapper.insert(houseList);
+        return saveStatus;
     }
 }

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cy.liveManagement.live_user.mapper.LiveUserMapper">
+
+    <select id="getLiveUserList" resultType="com.cy.liveManagement.live_user.entity.LiveUser">
+        select lu.user_id,lu.user_name,lu.phone,lu.sex,lu.status,hl.house_num,hl.house_area,hu.unit_name,hb.build_name,pl.park_name from live_user as lu
+        left join live_house as lh on lu.user_id = lh.user_id
+        left join house_list as hl on lh.house_id = hl.house_id
+        left join house_unit as hu on hu.unit_id = hl.unit_id
+        left join house_building  as hb on hb.build_id = hu.build_id
+        left join live_park as lp on lu.user_id = lp.user_id
+        left join parking_list as pl on pl.park_id = lp.park_id
+        where 1=1
+        <if test="userName != null and userName !=''">
+            and lu.user_name like concat('%',#{userName},'%')
+        </if>
+        <if test="phone != null and phone !=''">
+            and lu.phone like concat('%',#{phone},'%')
+        </if>
+    </select>
+    <select id="getUser" resultType="com.cy.liveManagement.live_user.entity.LiveUser">
+        select lu.*,lr.role_id from live_user as lu, live_role  as lr
+        where lu.user_id = lr.user_id  and lu.user_id =#{userId}
+    </select>
+</mapper>

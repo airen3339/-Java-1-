@@ -36,11 +36,13 @@ public class User implements Serializable {
     /**
      * 登录名
      */
+    @NotBlank
     private String loginName;
 
     /**
      * 登录密码
      */
+    @NotBlank
     private String password;
 
     /**

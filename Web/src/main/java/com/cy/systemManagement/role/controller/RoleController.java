@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * 角色信息管理
@@ -25,6 +26,16 @@ public class RoleController {
     @Autowired
     private RoleService roleService;
 
+
+    /**
+     * 获取角色列表
+     * @return
+     */
+    @GetMapping("/getList")
+    public CommonResult<List<Role>> getList(){
+        List<Role> list = roleService.list();
+        return CommonResult.success("角色列表查询成功",list);
+    }
 
     /**
      * 分配权限保存
