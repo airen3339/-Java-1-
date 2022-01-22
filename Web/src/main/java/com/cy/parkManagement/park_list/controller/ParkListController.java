@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author cy
@@ -26,8 +27,17 @@ public class ParkListController {
     /**
      * 车位查询列表
      */
+    @GetMapping("/listNoPage")
+    public CommonResult<List<ParkList>> getList(){
+        List<ParkList> list = parkListService.list();
+        return CommonResult.success("车位列表查询成功",list);
+    }
+
+    /**
+     * 车位查询列表
+     */
     @GetMapping("/list")
-    public CommonResult<IPage<ParkList>> getList(@Valid ParkListParam parkListParam){
+    public CommonResult<IPage<ParkList>> getListNoPage(@Valid ParkListParam parkListParam){
         IPage<ParkList> list = parkListService.getParkList(parkListParam);
         return CommonResult.success("车位列表查询成功",list);
     }

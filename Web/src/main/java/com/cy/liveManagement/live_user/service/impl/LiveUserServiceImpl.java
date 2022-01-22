@@ -144,4 +144,53 @@ public class LiveUserServiceImpl extends ServiceImpl<LiveUserMapper, LiveUser> i
         int updateById = parkListMapper.updateById(parkList);
         return insert == updateById;
     }
+
+    /**
+     * 退房
+     *
+     * @param param
+     */
+    @Override
+    @Transactional
+    public boolean returnHouse(AssignHouseParam param) {
+        //更新租户和房屋关系表状态为解绑；
+        LiveHouse liveHouse = new LiveHouse();
+        liveHouse.setUseStatus("1");
+        QueryWrapper<LiveHouse> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(LiveHouse::getHouseId,param.getHouseId())
+                .eq(LiveHouse::getUserId,param.getUserId())
+                .eq(LiveHouse::getUseStatus,"0");
+        int updateLiveHouseStatus = liveHouseMapper.update(liveHouse, queryWrapper);
+        //更新房屋表的使用状态为未使用；
+        HouseList houseList = new HouseList();
+        houseList.setStatus("0");
+        QueryWrapper<HouseList> query = new QueryWrapper<>();
+        query.lambda().eq(HouseList::getHouseId,param.getHouseId());
+        int updateHouseListStatus = houseListMapper.update(houseList, query);
+        return updateLiveHouseStatus == updateHouseListStatus;
+    }
+
+    /**
+     * 退车位
+     *
+     * @param livePark
+     */
+    @Override
+    @Transactional
+    public boolean returnPark(LivePark livePark) {
+        //2.更新租户和车位的关系为解绑；
+        QueryWrapper<LivePark> query = new QueryWrapper<>();
+        query.lambda().eq(LivePark::getParkId,livePark.getParkId())
+                .eq(LivePark::getUserId,livePark.getUserId())
+                .eq(LivePark::getLiveStatue,"0");
+        LivePark Livepark = new LivePark();
+        Livepark.setLiveStatue("1");
+        int updateLiveParkStatus = liveParkMapper.update(Livepark, query);
+        // 3.更新车位的使用状态为未使用；
+        ParkList parkList = new ParkList();
+        parkList.setParkStatus("0");
+        parkList.setParkId(livePark.getParkId());
+        int updateParkListStatus = parkListMapper.updateById(parkList);
+        return updateLiveParkStatus == updateParkListStatus;
+    }
 }

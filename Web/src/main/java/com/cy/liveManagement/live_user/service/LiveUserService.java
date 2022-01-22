@@ -57,4 +57,16 @@ public interface LiveUserService extends IService<LiveUser> {
      * @return
      */
     boolean assignSavePark(LivePark livePark);
+
+    /**
+     * 退房
+     * @param param
+     */
+    boolean returnHouse(AssignHouseParam param);
+
+    /**
+     * 退车位
+     * @param livePark
+     */
+    boolean returnPark(LivePark livePark);
 }

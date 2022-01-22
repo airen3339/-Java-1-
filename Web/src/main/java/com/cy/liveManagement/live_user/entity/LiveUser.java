@@ -8,7 +8,6 @@ import com.cy.valid.listValue;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 
@@ -66,9 +65,20 @@ public class LiveUser implements Serializable {
     /**
      * 角色id
      */
-    @NotNull
     @TableField(exist =  false)
     private Long roleId;
+
+    /**
+     * 房屋id
+     */
+    @TableField(exist =  false)
+    private Long houseId;
+
+    /**
+     * 车位id
+     */
+    @TableField(exist =  false)
+    private Long parkId;
 
     /**
      * 房屋编码
@@ -99,5 +109,17 @@ public class LiveUser implements Serializable {
      */
     @TableField(exist =  false)
     private String parkName;
+
+    /**
+     * 房屋使用状态
+     */
+    @TableField(exist =  false)
+    private String useStatus;
+
+    /**
+     * 车位使用状态
+     */
+    @TableField(exist =  false)
+    private String liveStatue;
 
 }

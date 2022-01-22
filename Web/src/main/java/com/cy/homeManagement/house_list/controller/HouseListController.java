@@ -1,15 +1,16 @@
 package com.cy.homeManagement.house_list.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.cy.CommonResult;
 import com.cy.homeManagement.house_list.entity.HouseList;
 import com.cy.homeManagement.house_list.entity.ListParam;
 import com.cy.homeManagement.house_list.service.HouseListService;
-import com.cy.homeManagement.house_unit.serveie.HouseUnitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author cy
@@ -22,8 +23,6 @@ import javax.validation.Valid;
 public class HouseListController {
     @Autowired
     private HouseListService houseListService;
-    @Autowired
-    private HouseUnitService houseUnitService;
     /**
      * 房屋查询列表
      * @param param
@@ -80,4 +79,16 @@ public class HouseListController {
         return CommonResult.error("删除房屋失败!");
     }
 
+    /**
+     * 根据单元id查询房屋列表
+     * @param unitId
+     * @return
+     */
+    @GetMapping("/getHouseListByUnitId")
+    public CommonResult<List<HouseList>> getHouseListByUnitId(long unitId){
+        QueryWrapper<HouseList> houseListQueryWrapper = new QueryWrapper<>();
+        houseListQueryWrapper.lambda().eq(HouseList::getUnitId,unitId);
+        List<HouseList> list = houseListService.list(houseListQueryWrapper);
+        return CommonResult.success("房屋列表查询成功",list);
+    }
 }

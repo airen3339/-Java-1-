@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/Web/src/main/resources/Mapper/feeManagemet/FeeParkMapper.xml" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/Web/src/main/resources/Mapper/feeManagemet/FeePowerMapper.xml" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/Web/src/main/resources/Mapper/feeManagemet/FeeWaterMapper.xml" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/Web/src/main/resources/Mapper/homeManagement/HouseBuildingMapper.xml" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/Web/src/main/resources/Mapper/homeManagement/HouseListMapper.xml" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/Web/src/main/resources/Mapper/homeManagement/HouseUnitMapper.xml" dialect="MySQL" />

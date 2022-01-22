@@ -4,6 +4,12 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cy.CommonResult;
+import com.cy.feeManagement.FeePark.entity.FeePark;
+import com.cy.feeManagement.FeePark.service.FeeParkService;
+import com.cy.feeManagement.FeePower.entity.FeePower;
+import com.cy.feeManagement.FeePower.service.FeePowerService;
+import com.cy.feeManagement.FeeWater.entity.FeeWater;
+import com.cy.feeManagement.FeeWater.service.FeeWaterService;
 import com.cy.liveManagement.live_park.entity.LivePark;
 import com.cy.liveManagement.live_user.entity.AssignHouseParam;
 import com.cy.liveManagement.live_user.entity.LiveUser;
@@ -14,6 +20,7 @@ import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author cy
@@ -26,6 +33,12 @@ import javax.validation.Valid;
 public class LiveUserController {
     @Autowired
     private LiveUserService liveUserService;
+    @Autowired
+    private FeePowerService feePowerService;
+    @Autowired
+    private FeeWaterService feeWaterService;
+    @Autowired
+    private FeeParkService feeParkService;
 
     /**
      * 新增业主
@@ -120,5 +133,66 @@ public class LiveUserController {
         }else {
             return CommonResult.error("分配车位失败!");
         }
+    }
+
+
+    /**
+     * 退房
+     * @param param
+     * @return
+     */
+    @PostMapping("/returnHouse")
+    public CommonResult<String> returnHouse(@RequestBody @Valid AssignHouseParam param){
+        //1.查询电费、水费是否交清
+        //构造查询条件
+        QueryWrapper<FeeWater> queryWater = new QueryWrapper<>();
+        queryWater.lambda().eq(FeeWater::getHouseId,param.getHouseId())
+                .eq(FeeWater::getUserId,param.getUserId())
+                .eq(FeeWater::getPayWaterStatus,"0");
+        List<FeeWater> list = feeWaterService.list(queryWater);
+        if(list != null && list.size() > 0){
+            return CommonResult.error("请缴水费之后再退房!");
+        }
+        //查询电费
+        QueryWrapper<FeePower> queryPower = new QueryWrapper<>();
+        queryPower.lambda().eq(FeePower::getHouseId,param.getHouseId())
+                .eq(FeePower::getUserId,param.getUserId())
+                .eq(FeePower::getPayPowerStatus,"0");
+        List<FeePower> list1 = feePowerService.list(queryPower);
+        if(list1 != null && list1.size() >0){
+            return CommonResult.error("请缴电费之后再退房!");
+        }
+        boolean returnHouseStatus = liveUserService.returnHouse(param);
+        if (returnHouseStatus) {
+            return CommonResult.success("退房成功!");
+        }else {
+            return CommonResult.error("退房失败!");
+        }
+    }
+
+
+    /**
+     * 退车位
+     * @param livePark
+     * @return
+     */
+    @PostMapping("/returnPark")
+    public CommonResult<String> returnPark(@RequestBody @Valid LivePark livePark){
+        // 1.查询车位费是否已经交清；
+        QueryWrapper<FeePark> query = new QueryWrapper<>();
+        query.lambda().eq(FeePark::getParkId,livePark.getParkId())
+                .eq(FeePark::getUserId,livePark.getUserId())
+                .eq(FeePark::getPayParkStatus,"0");
+        List<FeePark> list = feeParkService.list(query);
+        if(list != null && list.size() >0){
+            return CommonResult.error("请缴清停车费后再退车位!");
+        }
+        boolean returnParkStatus = liveUserService.returnPark(livePark);
+        if (returnParkStatus) {
+            return CommonResult.success("退车位成功!");
+        }else {
+            return CommonResult.error("退车位失败!");
+        }
+
     }
 }
