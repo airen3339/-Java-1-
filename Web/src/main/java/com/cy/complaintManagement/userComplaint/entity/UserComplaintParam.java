@@ -1,0 +1,44 @@
+package com.cy.complaintManagement.userComplaint.entity;
+
+import lombok.Data;
+
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
+/**
+ * @author cy
+ * @program: WuYeManagementProgram_java
+ * @description:
+ * @date 2022-01-22 23:11:29
+ */
+@Data
+public class UserComplaintParam {
+
+    /**
+     * 当前页
+     */
+    @Min(1)
+    @NotNull
+    private Long currentPage;
+
+    /**
+     * 页容量
+     */
+    @NotNull
+    private Long pageSize;
+
+    /**
+     * 投诉人Id
+     */
+    private Long userId;
+
+    /**
+     * 标题
+     */
+    private String title;
+
+    /**
+     * 内容
+     */
+    private String complaintContent;
+}

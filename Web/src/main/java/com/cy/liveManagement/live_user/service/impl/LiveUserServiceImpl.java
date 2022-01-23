@@ -68,7 +68,7 @@ public class LiveUserServiceImpl extends ServiceImpl<LiveUserMapper, LiveUser> i
      */
     @Override
     public IPage<LiveUser> getLiveUserList(IPage<LiveUser> page, String userName, String phone) {
-        return this.baseMapper.getLiveUserList(page,userName,phone);
+        return this.baseMapper.getLiveUserList(page, userName, phone);
     }
 
     /**
@@ -83,7 +83,7 @@ public class LiveUserServiceImpl extends ServiceImpl<LiveUserMapper, LiveUser> i
         this.baseMapper.updateById(liveUser);
         //2.角色关联表的数据删除
         QueryWrapper<LiveRole> query = new QueryWrapper<>();
-        query.lambda().eq(LiveRole::getUserId,liveUser.getUserId());
+        query.lambda().eq(LiveRole::getUserId, liveUser.getUserId());
         //3.插入新的角色
         LiveRole liveRole = new LiveRole();
         liveRole.setRoleId(liveUser.getRoleId());
@@ -123,6 +123,7 @@ public class LiveUserServiceImpl extends ServiceImpl<LiveUserMapper, LiveUser> i
         house.setStatus("1");
         int updateById = houseListMapper.updateById(house);
         return insert == updateById;
+
     }
 
     /**
@@ -157,15 +158,15 @@ public class LiveUserServiceImpl extends ServiceImpl<LiveUserMapper, LiveUser> i
         LiveHouse liveHouse = new LiveHouse();
         liveHouse.setUseStatus("1");
         QueryWrapper<LiveHouse> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq(LiveHouse::getHouseId,param.getHouseId())
-                .eq(LiveHouse::getUserId,param.getUserId())
-                .eq(LiveHouse::getUseStatus,"0");
+        queryWrapper.lambda().eq(LiveHouse::getHouseId, param.getHouseId())
+                .eq(LiveHouse::getUserId, param.getUserId())
+                .eq(LiveHouse::getUseStatus, "0");
         int updateLiveHouseStatus = liveHouseMapper.update(liveHouse, queryWrapper);
         //更新房屋表的使用状态为未使用；
         HouseList houseList = new HouseList();
         houseList.setStatus("0");
         QueryWrapper<HouseList> query = new QueryWrapper<>();
-        query.lambda().eq(HouseList::getHouseId,param.getHouseId());
+        query.lambda().eq(HouseList::getHouseId, param.getHouseId());
         int updateHouseListStatus = houseListMapper.update(houseList, query);
         return updateLiveHouseStatus == updateHouseListStatus;
     }
@@ -180,9 +181,9 @@ public class LiveUserServiceImpl extends ServiceImpl<LiveUserMapper, LiveUser> i
     public boolean returnPark(LivePark livePark) {
         //2.更新租户和车位的关系为解绑；
         QueryWrapper<LivePark> query = new QueryWrapper<>();
-        query.lambda().eq(LivePark::getParkId,livePark.getParkId())
-                .eq(LivePark::getUserId,livePark.getUserId())
-                .eq(LivePark::getLiveStatue,"0");
+        query.lambda().eq(LivePark::getParkId, livePark.getParkId())
+                .eq(LivePark::getUserId, livePark.getUserId())
+                .eq(LivePark::getLiveStatue, "0");
         LivePark Livepark = new LivePark();
         Livepark.setLiveStatue("1");
         int updateLiveParkStatus = liveParkMapper.update(Livepark, query);

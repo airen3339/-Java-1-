@@ -34,7 +34,8 @@ import java.util.stream.Collectors;
         "com.cy.liveManagement.live_user.controller",
         "com.cy.feeManagement.FeePower.controller",
         "com.cy.feeManagement.FeeWater.controller",
-        "com.cy.feeManagement.FeePark.controller"
+        "com.cy.feeManagement.FeePark.controller",
+        "com.cy.complaintManagement.userComplaint.controller"
 })
 public class GlobalExceptionHandler {
     // 处理校验失败异常

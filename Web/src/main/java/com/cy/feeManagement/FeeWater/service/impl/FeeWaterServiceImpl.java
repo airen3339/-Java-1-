@@ -41,9 +41,9 @@ public class FeeWaterServiceImpl extends ServiceImpl<FeeWaterMapper, FeeWater> i
         LiveHouse house = liveHouseMapper.selectOne(liveHouseQueryWrapper);
         if (house != null) {
             QueryWrapper<FeeWater> feePowerQueryWrapper = new QueryWrapper<>();
-            feePowerQueryWrapper.lambda().eq(FeeWater::getPayWaterMonth,feeWater.getPayWaterMoney()).eq(FeeWater::getHouseId,feeWater.getHouseId());
+            feePowerQueryWrapper.lambda().eq(FeeWater::getPayWaterMonth,feeWater.getPayWaterMonth()).eq(FeeWater::getHouseId,feeWater.getHouseId());
             FeeWater power = feeWaterMapper.selectOne(feePowerQueryWrapper);
-            if (power != null) {
+            if (power == null) {
                 //把查询出来的用户id设置到水费实体里面
                 feeWater.setUserId(house.getUserId());
                 //保存电费到数据库

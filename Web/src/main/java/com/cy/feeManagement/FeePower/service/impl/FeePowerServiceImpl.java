@@ -33,7 +33,6 @@ public class FeePowerServiceImpl extends ServiceImpl<FeePowerMapper, FeePower> i
      */
     @Override
     public int saveFeePower(FeePower feePower) {
-        System.out.println(feePower.getPayPowerMonth() instanceof String);
         int flag = -1;
         //根据房屋id查询正在使用该房间用户
         QueryWrapper<LiveHouse> liveHouseQueryWrapper = new QueryWrapper<>();

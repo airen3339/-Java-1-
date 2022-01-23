@@ -10,7 +10,10 @@ import com.cy.feeManagement.FeePower.entity.FeePower;
 import com.cy.feeManagement.FeePower.service.FeePowerService;
 import com.cy.feeManagement.FeeWater.entity.FeeWater;
 import com.cy.feeManagement.FeeWater.service.FeeWaterService;
+import com.cy.liveManagement.live_house.entity.LiveHouse;
+import com.cy.liveManagement.live_house.mapper.LiveHouseMapper;
 import com.cy.liveManagement.live_park.entity.LivePark;
+import com.cy.liveManagement.live_park.mapper.LiveParkMapper;
 import com.cy.liveManagement.live_user.entity.AssignHouseParam;
 import com.cy.liveManagement.live_user.entity.LiveUser;
 import com.cy.liveManagement.live_user.entity.LiveUserParam;
@@ -19,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -39,6 +43,10 @@ public class LiveUserController {
     private FeeWaterService feeWaterService;
     @Autowired
     private FeeParkService feeParkService;
+    @Resource
+    private LiveHouseMapper liveHouseMapper;
+    @Resource
+    private LiveParkMapper liveParkMapper;
 
     /**
      * 新增业主
@@ -97,6 +105,34 @@ public class LiveUserController {
             return CommonResult.success("编辑成功!");
         }else {
             return CommonResult.error("编辑失败");
+        }
+    }
+
+    @DeleteMapping("/{userId}")
+    public  CommonResult<String> deleteUser(@PathVariable("userId") @Valid Long userId){
+        QueryWrapper<LiveHouse> liveHouseQueryWrapper = new QueryWrapper<>();
+        liveHouseQueryWrapper.lambda().eq(LiveHouse::getUserId,userId);
+        List<LiveHouse> liveHouseList = liveHouseMapper.selectList(liveHouseQueryWrapper);
+
+        QueryWrapper<LivePark> liveParkQueryWrapper = new QueryWrapper<>();
+        liveParkQueryWrapper.lambda().eq(LivePark::getUserId,userId);
+        List<LivePark> liveParks = liveParkMapper.selectList(liveParkQueryWrapper);
+
+        for (LiveHouse liveHouse: liveHouseList) {
+            if ("0".equals(liveHouse.getUseStatus())){
+                return CommonResult.error("请退房之后在操作");
+            }
+        }
+        for (LivePark livePark: liveParks) {
+            if ("0".equals(livePark.getLiveStatue())){
+                return CommonResult.error("请退车位之后在操作");
+            }
+        }
+        boolean removeStatus = liveUserService.removeById(userId);
+        if (removeStatus){
+            return CommonResult.success("删除成功!");
+        }else {
+            return CommonResult.error("删除失败");
         }
     }
 
