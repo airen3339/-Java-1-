@@ -17,6 +17,7 @@ import com.cy.repairManagement.userRepair.service.UserRepairService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Date;
 
 /**
@@ -35,7 +36,7 @@ public class UserRepairController {
      * @return
      */
     @GetMapping("/myList")
-    public CommonResult<IPage<UserRepair>> getMyList(UserRepairParam userRepairParam){
+    public CommonResult<IPage<UserRepair>> getMyList(@Valid UserRepairParam userRepairParam){
         //构造查询条件
         QueryWrapper<UserRepair> query = new QueryWrapper<>();
         query.lambda().eq(UserRepair::getUserId,userRepairParam.getUserId())
@@ -56,7 +57,7 @@ public class UserRepairController {
      * @return
      */
     @GetMapping("/list")
-    public CommonResult<IPage<UserRepair>> getList(UserRepairParam userRepairParam){
+    public CommonResult<IPage<UserRepair>> getList(@Valid UserRepairParam userRepairParam){
         //构造查询条件
         QueryWrapper<UserRepair> query = new QueryWrapper<>();
         query.lambda().like(UserRepair::getRepairContent,userRepairParam.getRepairContent())
@@ -76,7 +77,7 @@ public class UserRepairController {
      * @return
      */
     @PostMapping
-    public CommonResult<String> add(@RequestBody UserRepair userRepair){
+    public CommonResult<String> add(@RequestBody @Valid UserRepair userRepair){
         userRepair.setCommitTime(new Date());
         userRepair.setStatus("0");
         boolean saveStatus = userRepairService.save(userRepair);
@@ -93,7 +94,7 @@ public class UserRepairController {
      * @return
      */
     @PutMapping
-    public CommonResult<String> edit(@RequestBody UserRepair userRepair){
+    public CommonResult<String> edit(@RequestBody @Valid UserRepair userRepair){
         QueryWrapper<UserRepair> userRepairQueryWrapper = new QueryWrapper<>();
         userRepairQueryWrapper.lambda().eq(UserRepair::getRepairId,userRepair.getRepairId());
         UserRepair one = userRepairService.getOne(userRepairQueryWrapper);
@@ -114,7 +115,7 @@ public class UserRepairController {
      * @return
      */
     @DeleteMapping("/{repairId}")
-    public CommonResult<String> delete(@PathVariable("repairId") Long repairId){
+    public CommonResult<String> delete(@PathVariable("repairId") @Valid Long repairId){
         boolean deleteStatus = userRepairService.removeById(repairId);
         if(deleteStatus){
             return CommonResult.success("删除成功!");
