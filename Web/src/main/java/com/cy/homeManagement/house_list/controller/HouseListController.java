@@ -5,10 +5,12 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.cy.CommonResult;
 import com.cy.homeManagement.house_list.entity.HouseList;
 import com.cy.homeManagement.house_list.entity.ListParam;
+import com.cy.homeManagement.house_list.mapper.HouseListMapper;
 import com.cy.homeManagement.house_list.service.HouseListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -23,6 +25,8 @@ import java.util.List;
 public class HouseListController {
     @Autowired
     private HouseListService houseListService;
+    @Resource
+    private HouseListMapper houseListMapper;
     /**
      * 房屋查询列表
      * @param param
@@ -58,6 +62,14 @@ public class HouseListController {
      */
     @PutMapping
     public CommonResult<String> editHouse(@RequestBody @Valid HouseList houseList){
+        QueryWrapper<HouseList> houseListQueryWrapper = new QueryWrapper<>();
+        houseListQueryWrapper.lambda().eq(HouseList::getUnitId,houseList.getUnitId());
+        List<HouseList> houseListByUnitId = houseListMapper.getHouseListByUnitId(houseList.getUnitId());
+        for (HouseList houseList1: houseListByUnitId) {
+            if (houseList1.getHouseNum().equals(houseList.getHouseNum())){
+                return CommonResult.error("房屋编号已存在");
+            }
+        }
         boolean editState = houseListService.updateById(houseList);
         if(editState){
             return CommonResult.success("编辑房屋成功!");

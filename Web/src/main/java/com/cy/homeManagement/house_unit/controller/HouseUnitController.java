@@ -63,11 +63,18 @@ public class HouseUnitController {
      */
     @PutMapping
     public CommonResult<String> editHouseUnit(@RequestBody @Valid  HouseUnit houseUnit){
-        boolean editStatus = houseUnitService.updateById(houseUnit);
-        if(editStatus){
-            return CommonResult.success("编辑单元成功!");
+        QueryWrapper<HouseUnit> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(HouseUnit::getUnitName,houseUnit.getUnitName());
+        HouseUnit one = houseUnitService.getOne(queryWrapper);
+        if (one != null){
+            return CommonResult.error("单元已存在!");
+        }else {
+            boolean editStatus = houseUnitService.updateById(houseUnit);
+            if (editStatus) {
+                return CommonResult.success("编辑单元成功!");
+            }
+            return CommonResult.error("编辑单元失败!");
         }
-        return CommonResult.error("编辑单元失败!");
     }
 
     /**
