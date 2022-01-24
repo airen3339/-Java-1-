@@ -62,13 +62,13 @@ public class LiveUserServiceImpl extends ServiceImpl<LiveUserMapper, LiveUser> i
      * 业主列表
      *
      * @param page
-     * @param userName
+     * @param loginName
      * @param phone
      * @return
      */
     @Override
-    public IPage<LiveUser> getLiveUserList(IPage<LiveUser> page, String userName, String phone) {
-        return this.baseMapper.getLiveUserList(page, userName, phone);
+    public IPage<LiveUser> getLiveUserList(IPage<LiveUser> page, String loginName, String phone) {
+        return this.baseMapper.getLiveUserList(page, loginName, phone);
     }
 
     /**
@@ -193,5 +193,19 @@ public class LiveUserServiceImpl extends ServiceImpl<LiveUserMapper, LiveUser> i
         parkList.setParkId(livePark.getParkId());
         int updateParkListStatus = parkListMapper.updateById(parkList);
         return updateLiveParkStatus == updateParkListStatus;
+    }
+
+    /**
+     * 根据用户名查用户
+     *
+     * @param username
+     * @return
+     */
+    @Override
+    public LiveUser loadUser(String username) {
+        //认证
+        QueryWrapper<LiveUser> query = new QueryWrapper<>();
+        query.lambda().eq(LiveUser::getUsername,username);
+        return this.baseMapper.selectOne(query);
     }
 }

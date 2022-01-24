@@ -23,11 +23,11 @@ public interface LiveUserService extends IService<LiveUser> {
     /**
      * 业主列表
      * @param page
-     * @param userName
+     * @param loginName
      * @param phone
      * @return
      */
-    IPage<LiveUser> getLiveUserList(IPage<LiveUser> page, String userName, String phone);
+    IPage<LiveUser> getLiveUserList(IPage<LiveUser> page, String loginName, String phone);
 
 
     /**
@@ -69,4 +69,11 @@ public interface LiveUserService extends IService<LiveUser> {
      * @param livePark
      */
     boolean returnPark(LivePark livePark);
+
+    /**
+     * 根据用户名查用户
+     * @param username
+     * @return
+     */
+    LiveUser loadUser(String username);
 }

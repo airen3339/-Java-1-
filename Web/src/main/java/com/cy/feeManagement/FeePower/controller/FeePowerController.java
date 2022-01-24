@@ -56,6 +56,12 @@ public class FeePowerController {
      */
     @PutMapping
     public CommonResult<String> edit(@RequestBody @Validated(value = {feeAddOrEdit.class}) FeePower feePower){
+        QueryWrapper<FeePower> liveParkQueryWrapper = new QueryWrapper<>();
+        liveParkQueryWrapper.lambda().eq(FeePower::getPowerId,feePower.getPowerId());
+        FeePower one = feePowerService.getOne(liveParkQueryWrapper);
+        if ("1".equals(one.getPayPowerStatus())){
+            return CommonResult.error("已缴费，无法编辑");
+        }
         boolean updateFeePowerStatus = feePowerService.updateFeePower(feePower);
         if (updateFeePowerStatus) {
             return CommonResult.success("编辑电费成功!");

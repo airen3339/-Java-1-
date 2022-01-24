@@ -81,7 +81,7 @@ public class FeeWater implements Serializable {
      * 业主名字
      */
     @TableField(exist = false)
-    private String userName;
+    private String loginName;
 
     /**
      * 业主手机号

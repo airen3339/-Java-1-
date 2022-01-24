@@ -37,7 +37,7 @@ public class UserParam {
     /**
      * 姓名
      */
-    private String userName;
+    private String loginName;
 
     /**
      * 电话

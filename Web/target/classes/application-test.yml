@@ -29,3 +29,6 @@ jwt:
   secret: com.cy
   #30分钟过期
   expiration: 1800000
+#配置登录请求url
+cy:
+  loginUrl: /api/user/login

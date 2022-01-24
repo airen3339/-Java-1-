@@ -61,10 +61,11 @@ public class JwtUtils {
      * @param username 用户
      * @return 令牌
      */
-    public String generateToken(String username) {
+    public String generateToken(String username,String userType) {
         Map<String, Object> claims = new HashMap<>(2);
         claims.put(Claims.SUBJECT,username);
         claims.put(Claims.ISSUED_AT, new Date());
+        claims.put("userType",userType);
         return generateToken(claims);
     }
 

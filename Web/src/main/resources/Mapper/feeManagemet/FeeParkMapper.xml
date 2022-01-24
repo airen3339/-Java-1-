@@ -5,12 +5,12 @@
 <mapper namespace="com.cy.feeManagement.FeePark.mapper.FeeParkMapper">
 
     <select id="getFeeParkList" resultType="com.cy.feeManagement.FeePark.entity.FeePark">
-        select lu.user_name,lu.phone,fp.*,pl.park_name,pl.park_type from fee_park as fp
+        select lu.login_name,lu.phone,fp.*,pl.park_name,pl.park_type from fee_park as fp
         left join live_user as lu on lu.user_id = fp.user_id
         left join parking_list pl on pl.park_id = fp.park_id
         <where>
             <if test="userName !=null and userName !=''">
-                and lu.user_name like concat('%',#{userName},'%')
+                and lu.login_name like concat('%',#{userName},'%')
             </if>
             <if test="parkName !=null and parkName !=''">
                 and pl.park_name like concat('%',#{parkName},'%')

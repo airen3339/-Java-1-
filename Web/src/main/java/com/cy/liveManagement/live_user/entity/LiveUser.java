@@ -6,10 +6,13 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.cy.valid.listValue;
 import lombok.Data;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
+import java.util.Collection;
 
 /**
  * @author cy
@@ -19,15 +22,15 @@ import java.io.Serializable;
  */
 @Data
 @TableName("live_user")
-public class LiveUser implements Serializable {
+public class LiveUser implements UserDetails,Serializable {
     @TableId(type = IdType.AUTO)
     private Long userId;
 
     /**
-     * 姓名
+     * 登录账户
      */
     @NotBlank
-    private String userName;
+    private String username;
 
     /**
      * 联系电话
@@ -45,7 +48,7 @@ public class LiveUser implements Serializable {
     private String sex;
 
     /**
-     * 登录账户
+     * 姓名
      */
     @NotBlank
     private String loginName;
@@ -121,5 +124,33 @@ public class LiveUser implements Serializable {
      */
     @TableField(exist =  false)
     private String liveStatue;
+
+    //下面的字段，属于spring security的UserDetails的字段
+
+    /**
+     * 帐户是否过期(1 未过期，0已过期)
+     */
+    private boolean isAccountNonExpired = true;
+
+    /**
+     * 帐户是否被锁定(1 未锁定，0已锁定)
+     */
+    private boolean isAccountNonLocked = true;
+
+    /**
+     * 密码是否过期(1 未过期，0已过期)
+     */
+    private boolean isCredentialsNonExpired = true;
+
+    /**
+     * 帐户是否可用(1 可用，0 删除用户)
+     */
+    private boolean isEnabled = true;
+
+    /**
+     * 由于authorities不是数据库里面的字段，所以要排除他，不然mybatis-plus找不到该字段会报错
+     */
+    @TableField(exist = false)
+    Collection<? extends GrantedAuthority> authorities;
 
 }

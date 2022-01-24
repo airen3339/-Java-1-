@@ -31,7 +31,7 @@ public class LiveUserParam implements Serializable {
     /**
      *
      */
-    private String userName;
+    private String loginName;
 
     /**
      * 电话

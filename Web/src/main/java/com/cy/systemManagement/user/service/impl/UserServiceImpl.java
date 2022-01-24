@@ -38,8 +38,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if(StringUtils.isNotEmpty(param.getPhone())){
             query.lambda().like(User::getPhone, param.getPhone());
         }
-        if(StringUtils.isNotEmpty(param.getUserName())){
-            query.lambda().like(User::getUserName, param.getUserName());
+        if(StringUtils.isNotEmpty(param.getLoginName())){
+            query.lambda().like(User::getLoginName, param.getLoginName());
         }
         return this.page(page,query);
     }
@@ -69,5 +69,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         queryWrapper.lambda().eq(UserRole::getUserId,userRole.getUserId());
         userRoleMapper.delete(queryWrapper);
         userRoleMapper.insert(userRole);
+    }
+
+    /**
+     * 根据用户名查询用户信息
+     *
+     * @param username
+     * @return
+     */
+    @Override
+    public User loadUser(String username) {
+        QueryWrapper<User> query = new QueryWrapper<>();
+        query.lambda().eq(User::getUsername, username);
+        return this.baseMapper.selectOne(query);
     }
 }

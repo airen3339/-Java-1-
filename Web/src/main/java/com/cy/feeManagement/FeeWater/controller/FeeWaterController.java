@@ -55,6 +55,12 @@ public class FeeWaterController {
      */
     @PutMapping
     public CommonResult<String> edit(@RequestBody @Validated(value = {feeAddOrEdit.class})  FeeWater feeWater){
+        QueryWrapper<FeeWater> liveParkQueryWrapper = new QueryWrapper<>();
+        liveParkQueryWrapper.lambda().eq(FeeWater::getWaterId,feeWater.getWaterId());
+        FeeWater one = feeWaterService.getOne(liveParkQueryWrapper);
+        if ("1".equals(one.getPayWaterStatus())){
+            return CommonResult.error("已缴费，无法编辑");
+        }
         boolean updateFeePowerStatus = feeWaterService.updateFeePower(feeWater);
         if (updateFeePowerStatus) {
             return CommonResult.success("编辑水费成功!");

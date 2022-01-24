@@ -65,6 +65,12 @@ public class FeeParkController {
      */
     @PutMapping
     public CommonResult<String> edit(@RequestBody FeePark feePark){
+        QueryWrapper<FeePark> liveParkQueryWrapper = new QueryWrapper<>();
+        liveParkQueryWrapper.lambda().eq(FeePark::getParkFeeId,feePark.getParkFeeId());
+        FeePark one = feeParkService.getOne(liveParkQueryWrapper);
+        if ("1".equals(one.getPayParkStatus())){
+            return CommonResult.error("已缴费，无法编辑");
+        }
         //1.查询当前正在使用车位的租户
         //构造查询条件
         QueryWrapper<LivePark> query = new QueryWrapper<>();

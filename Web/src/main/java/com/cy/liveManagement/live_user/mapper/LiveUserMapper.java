@@ -19,7 +19,7 @@ public interface LiveUserMapper extends BaseMapper<LiveUser> {
      * @param phone
      * @return
      */
-    IPage<LiveUser> getLiveUserList(IPage<LiveUser> page, @Param("userName") String userName, @Param("phone") String phone);
+    IPage<LiveUser> getLiveUserList(IPage<LiveUser> page, @Param("loginName") String userName, @Param("phone") String phone);
 
     /**
      * 查询业主数据

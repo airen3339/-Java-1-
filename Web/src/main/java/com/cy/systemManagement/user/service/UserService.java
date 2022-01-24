@@ -34,4 +34,12 @@ public interface UserService extends IService<User> {
      * @param userRole
      */
     void saveRole(UserRole userRole);
+
+
+    /**
+     * 根据用户名查询用户信息
+     * @param username
+     * @return
+     */
+    User loadUser(String username);
 }
