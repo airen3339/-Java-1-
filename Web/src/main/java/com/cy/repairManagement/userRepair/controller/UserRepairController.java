@@ -15,6 +15,7 @@ import com.cy.repairManagement.userRepair.entity.UserRepair;
 import com.cy.repairManagement.userRepair.entity.UserRepairParam;
 import com.cy.repairManagement.userRepair.service.UserRepairService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -76,6 +77,7 @@ public class UserRepairController {
      * @param userRepair
      * @return
      */
+    @PreAuthorize("hasAuthority('sys:myRepair:add')")
     @PostMapping
     public CommonResult<String> add(@RequestBody @Valid UserRepair userRepair){
         userRepair.setCommitTime(new Date());
@@ -93,6 +95,7 @@ public class UserRepairController {
      * @param userRepair
      * @return
      */
+    @PreAuthorize("hasAnyAuthority('sys:myRepair:edit','sys:repairList:do')")
     @PutMapping
     public CommonResult<String> edit(@RequestBody @Valid UserRepair userRepair){
         QueryWrapper<UserRepair> userRepairQueryWrapper = new QueryWrapper<>();
@@ -114,6 +117,7 @@ public class UserRepairController {
      * @param repairId
      * @return
      */
+    @PreAuthorize("hasAuthority('sys:myRepair:delete')")
     @DeleteMapping("/{repairId}")
     public CommonResult<String> delete(@PathVariable("repairId") @Valid Long repairId){
         boolean deleteStatus = userRepairService.removeById(repairId);

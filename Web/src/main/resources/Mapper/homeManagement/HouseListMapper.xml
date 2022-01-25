@@ -3,6 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.cy.homeManagement.house_list.mapper.HouseListMapper">
+
     <select id="getList" resultType="com.cy.homeManagement.house_list.entity.HouseList">
         select hb.`build_name`,hb.`build_id`,hu.unit_name,hl.*
         from house_building as hb,house_unit as hu,house_list as hl
@@ -21,7 +22,15 @@
         </if>
     </select>
     <select id="getHouseListByUnitId" resultType="com.cy.homeManagement.house_list.entity.HouseList">
-        SELECT * FROM house_list
+        SELECT *
+        FROM house_list
         WHERE unit_id = #{unitId}
+    </select>
+    <select id="editHouseList" resultType="com.cy.homeManagement.house_list.entity.HouseList">
+        SELECT hl.*
+        FROM `house_list` as hl
+                 LEFT JOIN house_building as hb ON hb.build_id = #{unitId}
+                 LEFT JOIN house_unit as hn ON hn.unit_id = #{buildId}
+
     </select>
 </mapper>

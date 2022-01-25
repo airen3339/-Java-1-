@@ -36,4 +36,6 @@ public class FeePowerParam implements Serializable {
      * 房屋id
      */
     private String houseNum;
+
+    private Long userId;
 }

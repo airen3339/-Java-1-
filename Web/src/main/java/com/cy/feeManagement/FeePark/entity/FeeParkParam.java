@@ -35,4 +35,6 @@ public class FeeParkParam {
      * 车位id
      */
     private String parkName;
+
+    private Long userId;
 }

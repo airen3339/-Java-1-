@@ -19,6 +19,7 @@ import com.cy.liveManagement.live_user.entity.LiveUser;
 import com.cy.liveManagement.live_user.entity.LiveUserParam;
 import com.cy.liveManagement.live_user.service.LiveUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,9 +50,11 @@ public class LiveUserController {
     private LiveParkMapper liveParkMapper;
     @Autowired
     private PasswordEncoder passwordEncoder;
+
     /**
      * 新增业主
      */
+    @PreAuthorize("hasAuthority('sys:liveUser:add')")
     @PostMapping
     public CommonResult<String> add(@RequestBody @Valid LiveUser liveUser) {
 
@@ -100,6 +103,7 @@ public class LiveUserController {
     /**
      * 编辑业主
      */
+    @PreAuthorize("hasAuthority('sys:liveUser:edit')")
     @PutMapping
     public CommonResult<String> edit(@RequestBody @Valid LiveUser liveUser) {
         //查询登录名是否被占用
@@ -131,6 +135,7 @@ public class LiveUserController {
      * @param userId
      * @return
      */
+    @PreAuthorize("hasAuthority('sys:liveUser:delete')")
     @DeleteMapping("/{userId}")
     public CommonResult<String> deleteUser(@PathVariable("userId") @Valid Long userId) {
         QueryWrapper<LiveHouse> liveHouseQueryWrapper = new QueryWrapper<>();
@@ -171,6 +176,7 @@ public class LiveUserController {
     /**
      * 分配房屋保存
      */
+    @PreAuthorize("hasAuthority('sys:liveUser:assignHome')")
     @PostMapping("/assignSave")
     public CommonResult<String> assignSave(@RequestBody @Valid AssignHouseParam param) {
         boolean assignStatus = liveUserService.assignHouse(param);
@@ -184,6 +190,7 @@ public class LiveUserController {
     /**
      * 分配车位保存
      */
+    @PreAuthorize("hasAuthority('sys:liveUser:assignCar')")
     @PostMapping("/assignParkSave")
     public CommonResult<String> assignParkSave(@RequestBody LivePark livePark) {
         boolean saveParkStatus = liveUserService.assignSavePark(livePark);
@@ -201,6 +208,7 @@ public class LiveUserController {
      * @param param
      * @return
      */
+    @PreAuthorize("hasAuthority('sys:liveUser:returnHome')")
     @PostMapping("/returnHouse")
     public CommonResult<String> returnHouse(@RequestBody @Valid AssignHouseParam param) {
         //1.查询电费、水费是否交清
@@ -237,6 +245,7 @@ public class LiveUserController {
      * @param livePark
      * @return
      */
+    @PreAuthorize("hasAuthority('sys:liveUser:returnCar')")
     @PostMapping("/returnPark")
     public CommonResult<String> returnPark(@RequestBody @Valid LivePark livePark) {
         // 1.查询车位费是否已经交清；

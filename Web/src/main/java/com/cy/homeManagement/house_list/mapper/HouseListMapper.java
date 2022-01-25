@@ -31,4 +31,6 @@ public interface HouseListMapper extends BaseMapper<HouseList> {
      * @return
      */
     List<HouseList> getHouseListByUnitId(Long unitId);
+
+    List<HouseList> editHouseList(@Param("unitId") Long unitId,@Param("buildId") Long buildId);
 }

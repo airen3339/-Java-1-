@@ -8,6 +8,7 @@ import com.cy.homeManagement.house_list.entity.ListParam;
 import com.cy.homeManagement.house_list.mapper.HouseListMapper;
 import com.cy.homeManagement.house_list.service.HouseListService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -43,6 +44,7 @@ public class HouseListController {
      * @param houseList
      * @return
      */
+    @PreAuthorize("hasAuthority('sys:house:add')")
     @PostMapping
     public CommonResult<String> addHouse(@RequestBody @Valid HouseList houseList){
         int saveState = houseListService.saveHouseList(houseList);
@@ -60,15 +62,17 @@ public class HouseListController {
      * @param houseList
      * @return
      */
+    @PreAuthorize("hasAuthority('sys:house:edit')")
     @PutMapping
     public CommonResult<String> editHouse(@RequestBody @Valid HouseList houseList){
-        QueryWrapper<HouseList> houseListQueryWrapper = new QueryWrapper<>();
-        houseListQueryWrapper.lambda().eq(HouseList::getUnitId,houseList.getUnitId());
-        List<HouseList> houseListByUnitId = houseListMapper.getHouseListByUnitId(houseList.getUnitId());
-        for (HouseList houseList1: houseListByUnitId) {
-            if (houseList1.getHouseNum().equals(houseList.getHouseNum())){
-                return CommonResult.error("房屋编号已存在");
-            }
+        HouseList byId = houseListService.getById(houseList.getHouseId());
+        List<HouseList> lists = houseListService.editHouseList(houseList);
+        for (HouseList houseItem : lists){
+                if (byId.getHouseArea().equals(houseList.getHouseArea())) {
+                    if (houseItem.getHouseNum().equals(houseList.getHouseNum())) {
+                        return CommonResult.error("房屋已存在");
+                    }
+                }
         }
         boolean editState = houseListService.updateById(houseList);
         if(editState){
@@ -82,8 +86,15 @@ public class HouseListController {
      * @param houseId
      * @return
      */
+    @PreAuthorize("hasAuthority('sys:house:delete')")
     @DeleteMapping("/{houseId}")
     public CommonResult<String> deleteHouse(@PathVariable("houseId") @Valid String houseId){
+        QueryWrapper<HouseList> houseListQueryWrapper = new QueryWrapper<>();
+        houseListQueryWrapper.lambda().eq(HouseList::getHouseId,houseId);
+        HouseList one = houseListService.getOne(houseListQueryWrapper);
+        if("1".equals(one.getStatus())){
+            return CommonResult.error("该房屋正在使用，无法删除!");
+        }
         boolean deleteState = houseListService.removeById(houseId);
         if(deleteState){
             return CommonResult.success("删除房屋成功!");

@@ -21,6 +21,12 @@ public interface MenuMapper extends BaseMapper<Menu> {
      */
     List<Menu> getMenuListByUserId(@Param("userId") Long userId);
 
+    /**
+     * 根据业主id查询权限列表
+     * @param userId
+     * @return
+     */
+    List<Menu> getMenuByUserIdForLiveUser(@Param("userId") Long userId);
 
     /**
      * 根据角色id查询权限信息
@@ -28,4 +34,6 @@ public interface MenuMapper extends BaseMapper<Menu> {
      * @return
      */
     List<Menu> getMenuListByRoleId(@Param("roleId") Long roleId);
+
+
 }

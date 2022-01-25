@@ -3,11 +3,17 @@ package com.cy.systemManagement.role.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.cy.CommonResult;
+import com.cy.liveManagement.live_role.entity.LiveRole;
+import com.cy.liveManagement.live_role.mapper.LiveRoleMapper;
 import com.cy.systemManagement.role.entity.*;
 import com.cy.systemManagement.role.service.RoleService;
+import com.cy.systemManagement.user_role.entity.UserRole;
+import com.cy.systemManagement.user_role.mapper.UserRoleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -25,7 +31,10 @@ public class RoleController {
 
     @Autowired
     private RoleService roleService;
-
+    @Resource
+    private UserRoleMapper userRoleMapper;
+    @Resource
+    private LiveRoleMapper liveRoleMapper;
 
     /**
      * 获取角色列表
@@ -43,6 +52,7 @@ public class RoleController {
      * @param param
      * @return
      */
+    @PreAuthorize("hasAnyAuthority('sys:role:assignMenu')")
     @PostMapping("/saveAssignRole")
     public CommonResult<String> saveAssignRole(@RequestBody @Valid RolePermissionParam param) {
         roleService.saveAssignRole(param.getRoleId(), param.getIdList());
@@ -84,7 +94,7 @@ public class RoleController {
      * @description: 新增角色
      * @date: 2021/12/22 16:47
      */
-
+    @PreAuthorize("hasAnyAuthority('sys:role:add')")
     @PostMapping
     public CommonResult<Role> addRole(@RequestBody @Valid Role role) {
         QueryWrapper<Role> roleQueryWrapper = new QueryWrapper<>();
@@ -109,7 +119,7 @@ public class RoleController {
      * @description: 编辑角色
      * @date: 2021/12/22 16:49
      */
-
+    @PreAuthorize("hasAnyAuthority('sys:role:edit')")
     @PutMapping
     public CommonResult<Role> editRole(@RequestBody @Valid Role role) {
         boolean editFlag = roleService.updateById(role);
@@ -125,8 +135,23 @@ public class RoleController {
      * @param roleId
      * @return
      */
+    @PreAuthorize("hasAnyAuthority('sys:role:delete')")
     @DeleteMapping("/{roleId}")
     public CommonResult<Role> deleteRole(@PathVariable @Valid Long roleId) {
+        QueryWrapper<UserRole> userRoleQueryWrapper = new QueryWrapper<>();
+        userRoleQueryWrapper.lambda().eq(UserRole::getRoleId,roleId);
+        List<UserRole> userRoles = userRoleMapper.selectList(userRoleQueryWrapper);
+        if (userRoles.size() > 0){
+            return CommonResult.error("角色已分配，不能删除");
+        }
+
+        QueryWrapper<LiveRole> liveUserQueryWrapper = new QueryWrapper<>();
+        liveUserQueryWrapper.lambda().eq(LiveRole::getRoleId,roleId);
+        List<LiveRole> liveUserRoles = liveRoleMapper.selectList(liveUserQueryWrapper);
+        if (liveUserRoles.size() > 0){
+            return CommonResult.error("角色已分配，不能删除");
+        }
+
         boolean removeFlag = roleService.removeById(roleId);
         if (removeFlag) {
             return CommonResult.success("删除角色成功");

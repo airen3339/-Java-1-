@@ -8,6 +8,7 @@ import com.cy.complaintManagement.userComplaint.entity.UserComplaint;
 import com.cy.complaintManagement.userComplaint.entity.UserComplaintParam;
 import com.cy.complaintManagement.userComplaint.service.UserComplaintService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -51,6 +52,7 @@ public class UserComplaintController {
      * @param userComplaint
      * @return
      */
+    @PreAuthorize("hasAuthority('sys:myUserComplaint:add')")
     @PostMapping
     public CommonResult<String> add(@RequestBody @Valid UserComplaint userComplaint){
         //设置投诉状态
@@ -71,6 +73,7 @@ public class UserComplaintController {
      * @param userComplaint
      * @return
      */
+    @PreAuthorize("hasAnyAuthority('sys:myUserComplaint:edit','sys:myUserComplaint:do')")
     @PutMapping
     public CommonResult<String> edit(@RequestBody @Valid UserComplaint userComplaint){
         UserComplaint userComplaintServiceById = userComplaintService.getById(userComplaint.getComplaintId());
@@ -90,6 +93,7 @@ public class UserComplaintController {
      * @param complaintId
      * @return
      */
+    @PreAuthorize("hasAuthority('sys:myUserComplaint:delete')")
     @DeleteMapping("/{complaintId}")
     public CommonResult<String> delete(@PathVariable("complaintId") @Valid Long complaintId){
         boolean deleteStatus = userComplaintService.removeById(complaintId);

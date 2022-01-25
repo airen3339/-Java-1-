@@ -39,5 +39,18 @@ public interface MenuService extends IService<Menu> {
      */
     List<Menu> getMenuListByRoleId(Long roleId);
 
+    /**
+     * @param parentId
+     * @param menuLabel
+     * @return
+     */
     int menuIsExist(Long parentId,String menuLabel );
+
+
+    /**
+     * 根据业主的id查询菜单
+     * @param userId
+     * @return
+     */
+    List<Menu> getMenuByUserIdForLiveUser(Long userId);
 }

@@ -93,4 +93,15 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         }
         return flag;
     }
+
+    /**
+     * 根据业主的id查询菜单
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<Menu> getMenuByUserIdForLiveUser(Long userId) {
+        return this.baseMapper.getMenuByUserIdForLiveUser(userId);
+    }
 }

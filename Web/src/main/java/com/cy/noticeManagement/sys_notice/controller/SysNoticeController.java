@@ -8,6 +8,7 @@ import com.cy.noticeManagement.sys_notice.entity.SysNotice;
 import com.cy.noticeManagement.sys_notice.entity.SysNoticeParam;
 import com.cy.noticeManagement.sys_notice.service.SysNoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -49,6 +50,7 @@ public class SysNoticeController {
      * @param sysNotice
      * @return
      */
+    @PreAuthorize("hasAuthority('sys:noticeList:add')")
     @PostMapping
     public CommonResult<String> add(@RequestBody SysNotice sysNotice){
         sysNotice.setCreateTime(new Date());
@@ -65,6 +67,7 @@ public class SysNoticeController {
      * @param sysNotice
      * @return
      */
+    @PreAuthorize("hasAuthority('sys:noticeList:edit')")
     @PutMapping
     public CommonResult<String> edit(@RequestBody SysNotice sysNotice){
         boolean editStatus = sysNoticeService.updateById(sysNotice);
@@ -80,6 +83,7 @@ public class SysNoticeController {
      * @param noticeId
      * @return
      */
+    @PreAuthorize("hasAuthority('sys:noticeList:delete')")
     @DeleteMapping("/{noticeId}")
     public CommonResult<String> delete(@PathVariable("noticeId") Long noticeId){
         boolean deleteStatus = sysNoticeService.removeById(noticeId);

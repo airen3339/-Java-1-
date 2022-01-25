@@ -6,9 +6,13 @@ import com.cy.CommonResult;
 import com.cy.homeManagement.house_building.entity.BuildingParam;
 import com.cy.homeManagement.house_building.entity.HouseBuilding;
 import com.cy.homeManagement.house_building.service.HouseBuildingService;
+import com.cy.homeManagement.house_unit.entity.HouseUnit;
+import com.cy.homeManagement.house_unit.mapper.HouseUnitMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -23,7 +27,8 @@ import java.util.List;
 public class HouseBuildingController {
     @Autowired
     private HouseBuildingService houseBuildingService;
-
+    @Resource
+    private HouseUnitMapper houseUnitMapper;
 
     /**
      * 栋数查询列表
@@ -51,6 +56,7 @@ public class HouseBuildingController {
      * @param houseBuilding
      * @return
      */
+    @PreAuthorize("hasAuthority('sys:houseBuilding:add')")
     @PostMapping
     public CommonResult<String> addHouseBuilding(@RequestBody @Valid HouseBuilding houseBuilding){
         QueryWrapper<HouseBuilding> queryWrapper = new QueryWrapper<>();
@@ -73,12 +79,13 @@ public class HouseBuildingController {
      * @param houseBuilding
      * @return
      */
+    @PreAuthorize("hasAuthority('sys:houseBuilding:edit')")
     @PutMapping
     public CommonResult<String> editHouseBuilding(@RequestBody @Valid HouseBuilding houseBuilding){
         QueryWrapper<HouseBuilding> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().eq(HouseBuilding::getBuildName,houseBuilding.getBuildName());
         HouseBuilding one = houseBuildingService.getOne(queryWrapper);
-        if (one != null){
+        if (one != null && !one.getBuildName().equals(houseBuilding.getBuildName())){
             return CommonResult.error("楼栋已存在!");
         }else {
             boolean editStatus = houseBuildingService.updateById(houseBuilding);
@@ -95,12 +102,20 @@ public class HouseBuildingController {
      * @param buildId
      * @return
      */
+    @PreAuthorize("hasAuthority('sys:houseBuilding:delete')")
     @DeleteMapping("/{buildId}")
     public CommonResult<String> deleteHouseBuilding(@PathVariable("buildId") @Valid Long buildId){
-        boolean removeStatus = houseBuildingService.removeById(buildId);
-        if(removeStatus){
-            return CommonResult.success("删除楼栋成功!");
+        QueryWrapper<HouseUnit> houseUnitQueryWrapper = new QueryWrapper<>();
+        houseUnitQueryWrapper.lambda().eq(HouseUnit::getBuildId,buildId);
+        List<HouseUnit> houseUnits = houseUnitMapper.selectList(houseUnitQueryWrapper);
+        if (houseUnits.size() > 0){
+            return CommonResult.error("该楼栋已有单元，不能删除");
+        }else {
+            boolean removeStatus = houseBuildingService.removeById(buildId);
+            if (removeStatus) {
+                return CommonResult.success("删除楼栋成功!");
+            }
+            return CommonResult.error("删除楼栋失败!");
         }
-        return CommonResult.error("删除楼栋失败!");
     }
 }

@@ -1,7 +1,12 @@
 package com.cy.handler;
 
 import com.cy.CommonResult;
+import com.cy.config.security.excepiton.CustomerAuthenticatingException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.CredentialsExpiredException;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -76,7 +81,32 @@ public class GlobalExceptionHandler {
         return CommonResult.error(400,"数据出错",errorMap);
     }
 
-    // 处理其他异常
+    @ExceptionHandler(InsufficientAuthenticationException.class)
+    public CommonResult<String> InsufficientAuthenticationException(){
+        return CommonResult.error("无权限访问资源");
+    }
+
+    @ExceptionHandler(CredentialsExpiredException.class)
+    public CommonResult<String> CredentialsExpiredException(){
+        return CommonResult.error("密码过期，登录失败!");
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public CommonResult<String> AccessDeniedException(){
+        return CommonResult.error("无权限处理，请联系管理员");
+    }
+
+    @ExceptionHandler(CustomerAuthenticatingException.class)
+    public CommonResult<String> CustomerAuthenticatingException(CustomerAuthenticatingException e){
+        return CommonResult.error(600,e.getMessage());
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public CommonResult<String> BadCredentialsException(){
+        return CommonResult.error("用户名或密码错误");
+    }
+
+     //处理其他异常
     @ExceptionHandler(Exception.class)
     public CommonResult<Exception> handleOtherException(Exception e) {
         System.out.println("Exception");

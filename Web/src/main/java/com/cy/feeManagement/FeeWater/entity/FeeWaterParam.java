@@ -36,4 +36,5 @@ public class FeeWaterParam implements Serializable {
      * 房屋id
      */
     private String houseNum;
+    private Long userId;
 }

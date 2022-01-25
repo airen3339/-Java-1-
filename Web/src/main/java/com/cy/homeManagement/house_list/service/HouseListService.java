@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.cy.homeManagement.house_list.entity.HouseList;
 import com.cy.homeManagement.house_list.entity.ListParam;
 
+import java.util.List;
+
 /**
  * @author cy
  * @program: WuYeManagementProgram_java
@@ -25,4 +27,6 @@ public interface HouseListService extends IService<HouseList> {
      * @return
      */
     int saveHouseList(HouseList houseList);
+
+    List<HouseList> editHouseList(HouseList houseList);
 }

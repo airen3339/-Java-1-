@@ -2,6 +2,7 @@ package com.cy.feeManagement.FeeWater.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cy.CommonResult;
 import com.cy.feeManagement.FeeWater.entity.FeeWater;
 import com.cy.feeManagement.FeeWater.entity.FeeWaterParam;
@@ -9,6 +10,7 @@ import com.cy.feeManagement.FeeWater.service.FeeWaterService;
 import com.cy.valid.feeAddOrEdit;
 import com.cy.valid.feePay;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,10 +31,28 @@ public class FeeWaterController {
 
 
     /**
+     * 我的水费
+     * @param feeWaterParam
+     * @return
+     */
+    @GetMapping("/getMyWaterFee")
+    public CommonResult<IPage<FeeWater>> getMyParkFee(FeeWaterParam feeWaterParam){
+        //构造分页对象
+        IPage<FeeWater> page = new Page<>();
+        page.setCurrent(feeWaterParam.getCurrentPage());
+        page.setSize(feeWaterParam.getPageSize());
+        //查询条件
+        QueryWrapper<FeeWater> query = new QueryWrapper<>();
+        query.lambda().eq(FeeWater::getUserId,feeWaterParam.getUserId());
+        IPage<FeeWater> list = feeWaterService.page(page, query);
+        return CommonResult.success("我的水费查询成功",list);
+    }
+    /**
      * 新增水费
      * @param feeWater
      * @return
      */
+    @PreAuthorize("hasAuthority('sys:feeWater:add')")
     @PostMapping
     public CommonResult<String> add(@RequestBody @Validated(value = {feeAddOrEdit.class}) FeeWater feeWater){
         int saveFeePowerStatus = feeWaterService.saveFeePower(feeWater);
@@ -53,6 +73,7 @@ public class FeeWaterController {
      * @param feeWater
      * @return
      */
+    @PreAuthorize("hasAuthority('sys:feeWater:edit')")
     @PutMapping
     public CommonResult<String> edit(@RequestBody @Validated(value = {feeAddOrEdit.class})  FeeWater feeWater){
         QueryWrapper<FeeWater> liveParkQueryWrapper = new QueryWrapper<>();
@@ -75,6 +96,7 @@ public class FeeWaterController {
      * @param waterId
      * @return
      */
+    @PreAuthorize("hasAuthority('sys:feeWater:delete')")
     @DeleteMapping("/{waterId}")
     public CommonResult<String> delete(@PathVariable("waterId") @Valid  Long waterId){
         //如果已经缴费，就不能删除
@@ -104,6 +126,7 @@ public class FeeWaterController {
     /**
      * 缴费
      */
+    @PreAuthorize("hasAuthority('sys:feeWater:pay')")
     @PostMapping("/payWater")
     public CommonResult<String> feeWater(@RequestBody @Validated(value = {feePay.class}) FeeWater feeWater){
         feeWater.setPayWaterTime((new Date()));

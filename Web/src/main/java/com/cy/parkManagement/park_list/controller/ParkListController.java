@@ -7,6 +7,7 @@ import com.cy.parkManagement.park_list.entity.ParkList;
 import com.cy.parkManagement.park_list.entity.ParkListParam;
 import com.cy.parkManagement.park_list.service.ParkListService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -45,6 +46,7 @@ public class ParkListController {
     /**
      * 新增车位
      */
+    @PreAuthorize("hasAuthority('sys:parkList:add')")
     @PostMapping
     public CommonResult<String> add(@RequestBody @Valid  ParkList parkList){
         QueryWrapper<ParkList> parkListQueryWrapper = new QueryWrapper<>();
@@ -64,20 +66,35 @@ public class ParkListController {
     /**
      * 编辑车位
      */
+    @PreAuthorize("hasAuthority('sys:parkList:edit')")
     @PutMapping
     public CommonResult<String> edit(@RequestBody @Valid ParkList parkList){
-        boolean editStatus = parkListService.updateById(parkList);
-        if(editStatus){
-            return CommonResult.success("编辑车位成功!");
+        QueryWrapper<ParkList> parkListQueryWrapper = new QueryWrapper<>();
+        parkListQueryWrapper.lambda().eq(ParkList::getParkName,parkList.getParkName());
+        ParkList one = parkListService.getOne(parkListQueryWrapper);
+        if (one != null && !one.getParkId().equals(parkList.getParkId())) {
+            return CommonResult.error("车位已经存在!");
+        }else {
+            boolean editStatus = parkListService.updateById(parkList);
+            if (editStatus) {
+                return CommonResult.success("编辑车位成功!");
+            }
+            return CommonResult.error("编辑车位失败!");
         }
-        return CommonResult.error("编辑车位失败!");
     }
 
     /**
      * 删除车位
      */
+    @PreAuthorize("hasAuthority('sys:parkList:delete')")
     @DeleteMapping("/{parkId}")
     public CommonResult<String> delete(@PathVariable("parkId") @Valid Long parkId){
+        QueryWrapper<ParkList> parkListQueryWrapper = new QueryWrapper<>();
+        parkListQueryWrapper.lambda().eq(ParkList::getParkId,parkId);
+        ParkList one = parkListService.getOne(parkListQueryWrapper);
+        if("1".equals(one.getParkStatus())){
+            return CommonResult.error("该车位正在使用，无法删除!");
+        }
         boolean deleteStatus = parkListService.removeById(parkId);
         if(deleteStatus){
             return CommonResult.success("删除车位成功!");

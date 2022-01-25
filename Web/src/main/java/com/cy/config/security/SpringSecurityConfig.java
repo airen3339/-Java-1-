@@ -65,8 +65,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling()
-                .authenticationEntryPoint(loginFailureHandler)
-                .accessDeniedHandler(customAccessDefineHandler);
+                .accessDeniedHandler(customAccessDefineHandler)
+                .authenticationEntryPoint(loginFailureHandler);
     }
 
     //注入AuthenticationManager

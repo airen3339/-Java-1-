@@ -54,4 +54,9 @@ public class HouseListServiceImpl extends ServiceImpl<HouseListMapper, HouseList
         saveStatus = this.baseMapper.insert(houseList);
         return saveStatus;
     }
+
+    @Override
+    public List<HouseList> editHouseList(HouseList houseList) {
+        return this.baseMapper.editHouseList(houseList.getUnitId(),houseList.getBuildId());
+    }
 }

@@ -27,7 +27,7 @@ import java.io.IOException;
 public class CustomAccessDefineHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AccessDeniedException e) throws IOException, ServletException {
-        String res =  JSONObject.toJSONString(new CommonResult<String>(600,"无权限访问,请联系管理员!",null), SerializerFeature.DisableCircularReferenceDetect);
+        String res =  JSONObject.toJSONString(new CommonResult<String>(700,"无权限访问,请联系管理员!",null), SerializerFeature.DisableCircularReferenceDetect);
         //设置返回格式
         httpServletResponse.setContentType("application/json;charset=UTF-8");
         ServletOutputStream out = httpServletResponse.getOutputStream();

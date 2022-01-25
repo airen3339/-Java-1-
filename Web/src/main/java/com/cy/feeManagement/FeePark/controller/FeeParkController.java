@@ -2,6 +2,7 @@ package com.cy.feeManagement.FeePark.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cy.CommonResult;
 import com.cy.feeManagement.FeePark.entity.FeePark;
 import com.cy.feeManagement.FeePark.entity.FeeParkParam;
@@ -10,6 +11,7 @@ import com.cy.liveManagement.live_park.entity.LivePark;
 import com.cy.liveManagement.live_park.mapper.LiveParkMapper;
 import com.cy.valid.feePay;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,10 +35,29 @@ public class FeeParkController {
 
 
     /**
+     * 我的停车费
+     * @param feeParkParam
+     * @return
+     */
+    @GetMapping("/getMyParkFee")
+    public CommonResult<IPage<FeePark>> getMyParkFee(FeeParkParam feeParkParam){
+        //构造分页对象
+        IPage<FeePark> page = new Page<>();
+        page.setCurrent(feeParkParam.getCurrentPage());
+        page.setSize(feeParkParam.getPageSize());
+        //查询条件
+        QueryWrapper<FeePark> query = new QueryWrapper<>();
+        query.lambda().eq(FeePark::getUserId,feeParkParam.getUserId());
+        IPage<FeePark> list = feeParkService.page(page, query);
+        return CommonResult.success("我的停车费查询成功",list);
+    }
+
+    /**
      * 新增停车费
      * @param feePark
      * @return
      */
+    @PreAuthorize("hasAuthority('sys:feePark:add')")
     @PostMapping
     public CommonResult<String> add(@RequestBody FeePark feePark){
         //1.查询当前正在使用车位的租户
@@ -63,6 +84,7 @@ public class FeeParkController {
      * @param feePark
      * @return
      */
+    @PreAuthorize("hasAuthority('sys:feePark:edit')")
     @PutMapping
     public CommonResult<String> edit(@RequestBody FeePark feePark){
         QueryWrapper<FeePark> liveParkQueryWrapper = new QueryWrapper<>();
@@ -95,6 +117,7 @@ public class FeeParkController {
      * @param parkFeeId
      * @return
      */
+    @PreAuthorize("hasAuthority('sys:feePark:delete')")
     @DeleteMapping("/{parkFeeId}")
     public CommonResult<String> delete(@PathVariable("parkFeeId") @Valid  Long parkFeeId){
         QueryWrapper<FeePark> query = new QueryWrapper<>();
@@ -123,6 +146,7 @@ public class FeeParkController {
     /**
      * 缴费
      */
+    @PreAuthorize("hasAuthority('sys:feePark:pay')")
     @PostMapping("/payPark")
     public CommonResult<String> payPark(@RequestBody @Validated(value = {feePay.class}) FeePark feePark){
         feePark.setPayParkTime((new Date()));

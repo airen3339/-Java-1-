@@ -2,6 +2,7 @@ package com.cy.feeManagement.FeePower.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cy.CommonResult;
 import com.cy.feeManagement.FeePower.entity.FeePower;
 import com.cy.feeManagement.FeePower.entity.FeePowerParam;
@@ -9,6 +10,7 @@ import com.cy.feeManagement.FeePower.service.FeePowerService;
 import com.cy.valid.feeAddOrEdit;
 import com.cy.valid.feePay;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,10 +31,29 @@ public class FeePowerController {
 
 
     /**
+     * 我的电费
+     * @param feePowerParam
+     * @return
+     */
+    @GetMapping("/getMyPowerFee")
+    public CommonResult<IPage<FeePower>> getMyParkFee(FeePowerParam feePowerParam){
+        //构造分页对象
+        IPage<FeePower> page = new Page<>();
+        page.setCurrent(feePowerParam.getCurrentPage());
+        page.setSize(feePowerParam.getPageSize());
+        //查询条件
+        QueryWrapper<FeePower> query = new QueryWrapper<>();
+        query.lambda().eq(FeePower::getUserId,feePowerParam.getUserId());
+        IPage<FeePower> list = feePowerService.page(page, query);
+        return CommonResult.success("我的电费查询成功",list);
+    }
+
+    /**
      * 新增电费
      * @param feePower
      * @return
      */
+    @PreAuthorize("hasAuthority('sys:feePower:add')")
     @PostMapping
     public CommonResult<String> add(@RequestBody @Validated(value = {feeAddOrEdit.class}) FeePower feePower){
         int saveFeePowerStatus = feePowerService.saveFeePower(feePower);
@@ -54,6 +75,7 @@ public class FeePowerController {
      * @param feePower
      * @return
      */
+    @PreAuthorize("hasAuthority('sys:feePower:edit')")
     @PutMapping
     public CommonResult<String> edit(@RequestBody @Validated(value = {feeAddOrEdit.class}) FeePower feePower){
         QueryWrapper<FeePower> liveParkQueryWrapper = new QueryWrapper<>();
@@ -76,6 +98,7 @@ public class FeePowerController {
      * @param powerId
      * @return
      */
+    @PreAuthorize("hasAuthority('sys:feePower:delete')")
     @DeleteMapping("/{powerId}")
     public CommonResult<String> delete(@PathVariable("powerId") @Valid Long powerId){
         //如果已经缴费，就不能删除
@@ -105,6 +128,7 @@ public class FeePowerController {
     /**
      * 缴费
      */
+    @PreAuthorize("hasAuthority('sys:feePower:pay')")
     @PostMapping("/payPower")
     public CommonResult<String> payPower(@RequestBody @Validated(value = {feePay.class}) FeePower feePower){
         feePower.setPayPowerTime((new Date()));

@@ -54,6 +54,7 @@ public class HouseList implements Serializable {
      * 栋数id
      */
     @TableField(exist = false)
+    @NotNull
     private Long buildId;
 
     /**
